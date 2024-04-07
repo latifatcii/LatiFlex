@@ -7,59 +7,13 @@
 
 import UIKit
 
-public protocol NavigationBarCustomButtonConfigurable {
+protocol NavigationBarCustomButtonConfigurable {
     var associatedNavigationItem: UINavigationItem { get }
 
-    func setHidesBackButton(isHidden: Bool, isAnimated: Bool)
-    func removeCustomBarButton(on position: UINavigationItem.CustomBarButtonPosition)
     func setCustomBarButton(style: UINavigationItem.CustomBarButtonStyle, position: UINavigationItem.CustomBarButtonPosition, target: Any?, selector: Selector)
-    func setCustomBarView(view: UIView, position: UINavigationItem.CustomBarButtonPosition)
-    func setBarButtons(with arguments: [BarButtonArguments], position: UINavigationItem.CustomBarButtonPosition)
-    func setBarButtonVisibility(position: UINavigationItem.CustomBarButtonPosition, isHidden: Bool)
 }
 
-public struct BarButtonArguments {
-    public let style: UINavigationItem.CustomBarButtonStyle
-    public let target: Any?
-    public let selector: Selector
-
-    public init(style: UINavigationItem.CustomBarButtonStyle, target: Any?, selector: Selector) {
-        self.style = style
-        self.target = target
-        self.selector = selector
-    }
-}
-
-public extension NavigationBarCustomButtonConfigurable {
-    func setBarButtonVisibility(position: UINavigationItem.CustomBarButtonPosition, isHidden: Bool) {
-        switch position {
-        case .left:
-            associatedNavigationItem.leftBarButtonItem?.customView?.isHidden = isHidden
-        case .right:
-            associatedNavigationItem.rightBarButtonItem?.customView?.isHidden = isHidden
-        case .center:
-            associatedNavigationItem.titleView?.isHidden = isHidden
-        }
-    }
-
-    func setHidesBackButton(isHidden: Bool, isAnimated: Bool) {
-        associatedNavigationItem.setHidesBackButton(isHidden, animated: isAnimated)
-    }
-    
-    func removeCustomBarButton(on position: UINavigationItem.CustomBarButtonPosition) {
-        switch position {
-        case .left:
-            associatedNavigationItem.leftBarButtonItem = nil
-            associatedNavigationItem.leftBarButtonItems = nil
-        case .right:
-            associatedNavigationItem.rightBarButtonItem = nil
-            associatedNavigationItem.rightBarButtonItems = nil
-        case .center:
-            associatedNavigationItem.titleView = nil
-        }
-    }
-
-    
+extension NavigationBarCustomButtonConfigurable {
     func setCustomBarButton(style: UINavigationItem.CustomBarButtonStyle, position: UINavigationItem.CustomBarButtonPosition, target: Any?, selector: Selector) {
         let barButtonItem: UIBarButtonItem
 
@@ -87,31 +41,5 @@ public extension NavigationBarCustomButtonConfigurable {
         }
 
         associatedNavigationItem.setBarButtonOnPosition(barButton: barButtonItem, position: position)
-    }
-    
-    func setCustomBarView(view: UIView, position: UINavigationItem.CustomBarButtonPosition) {
-        let barButtonItem = UIBarButtonItem(customView: view)
-        associatedNavigationItem.setBarButtonOnPosition(barButton: barButtonItem, position: position)
-    }
-
-    func setBarButtons(with arguments: [BarButtonArguments], position: UINavigationItem.CustomBarButtonPosition) {
-        let barbuttons: [UIBarButtonItem] = arguments.compactMap { argument in
-            switch argument.style {
-            case .custom(let view):
-                let barButtonItem: UIBarButtonItem
-                let button = UIButton()
-                button.addTarget(argument.target, action: argument.selector, for: .touchUpInside)
-                view.addSubview(button)
-                button.embedEdgeToEdge(in: view)
-                barButtonItem = UIBarButtonItem(customView: view)
-                return barButtonItem
-            case .image(let imageName, let bundle):
-                guard let image = UIImage(named: imageName, in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysOriginal) else { return nil }
-                return UIBarButtonItem(image: image, style: .plain, target: argument.target, action: argument.selector)
-            default:
-                return nil
-            }
-        }
-        associatedNavigationItem.setBarButtons(barButtons: barbuttons, position: position)
     }
 }

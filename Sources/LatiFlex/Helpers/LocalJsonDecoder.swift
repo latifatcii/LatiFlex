@@ -8,7 +8,7 @@
 import Foundation
 
 @propertyWrapper
-public struct LocalJson<Value: Decodable> {
+struct LocalJson<Value: Decodable> {
     let bundle: Bundle
     let name: String
 
@@ -32,7 +32,7 @@ public struct LocalJson<Value: Decodable> {
     }
 }
 
-public final class LocalJsonDecoder {
+final class LocalJsonDecoder {
     private enum LocalJsonDecoderError: Error {
         case pathNotFound
         case contentOfFileCannotConvertedToString
@@ -40,7 +40,7 @@ public final class LocalJsonDecoder {
         case jsonDecodingFailed
     }
 
-    public static var shared: LocalJsonDecoder = { return LocalJsonDecoder() }()
+    static var shared: LocalJsonDecoder = { return LocalJsonDecoder() }()
     private let kJsonFileType = "json"
 
     private init() { }
@@ -50,7 +50,7 @@ public final class LocalJsonDecoder {
     /// - Parameter responseType: Type of response, should conform decodable protocol
     /// - Returns: Response model
     /// - Throws: An LocalJsonDecoderError, can be handle for debugging
-    public func read<T: Decodable>(for responseType: T.Type, withName name: String, bundle: Bundle) throws -> T {
+    func read<T: Decodable>(for responseType: T.Type, withName name: String, bundle: Bundle) throws -> T {
         guard let path = bundle.path(forResource: name, ofType: kJsonFileType) else { throw LocalJsonDecoderError.pathNotFound }
         guard let jsonString = try? String(contentsOfFile: path) else { throw LocalJsonDecoderError.contentOfFileCannotConvertedToString }
         guard let jsonData = jsonString.data(using: .utf8) else { throw LocalJsonDecoderError.jsonDataCannotCreated }

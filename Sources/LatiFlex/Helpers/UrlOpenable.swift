@@ -7,14 +7,14 @@
 
 import UIKit
 
-public protocol UrlOpenable: AnyObject {
+protocol UrlOpenable: AnyObject {
     func canOpenUrl(_ url: URL) -> Bool
     func canOpenUrl(_ urlString: String) -> Bool
     func openUrl(_ url: URL, completion: ((Bool) -> Void)?)
     func openUrl(_ urlString: String, completion: ((Bool) -> Void)?)
 }
 
-public extension UrlOpenable {
+extension UrlOpenable {
     func canOpenUrl(_ url: URL) -> Bool {
         return UIApplication.shared.canOpenURL(url)
     }
