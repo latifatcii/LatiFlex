@@ -18,7 +18,7 @@ protocol LatiFlexDeeplinkPresenterInterface {
 
 extension LatiFlexDeeplinkPresenter {
     enum Constant {
-        static let closeButtonImage: String = "LatiFlexCloseButtonIcon"
+        static let closeButtonImage: String = "DebuggerKitCloseButtonIcon"
     }
 }
 
@@ -61,7 +61,7 @@ extension LatiFlexDeeplinkPresenter: LatiFlexDeeplinkPresenterInterface {
     func viewDidLoad() {
         view?.prepareUI()
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
-                                               bundle: .main),
+                                               bundle: .module),
                                  position: .left,
                                  target: self,
                                  selector: #selector(closeButtonTapped))

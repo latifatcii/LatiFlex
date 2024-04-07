@@ -19,8 +19,8 @@ protocol LatiFlexNetworkPresenterInterface {
 
 private extension LatiFlexNetworkPresenter {
     enum Constant {
-        static let closeButtonImage: String = "LatiFlexCloseButtonIcon"
-        static let deleteIconImage: String = "LatiFlexDeleteButtonIcon"
+        static let closeButtonImage: String = "DebuggerKitCloseButtonIcon"
+        static let deleteIconImage: String = "DebuggerKitDeleteButtonIcon"
     }
 }
 
@@ -88,12 +88,12 @@ extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
         view?.prepareUI()
         filteredNetworkModels = latiFlexNetworkModels()
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
-                                               bundle: .main),
+                                               bundle: .module),
                                  position: .left,
                                  target: self,
                                  selector: #selector(closeButtonTapped))
         view?.setCustomBarButton(style: .image(image: Constant.deleteIconImage,
-                                               bundle: .main),
+                                               bundle: .module),
                                  position: .right,
                                  target: self,
                                  selector: #selector(deleteButtonTapped))
