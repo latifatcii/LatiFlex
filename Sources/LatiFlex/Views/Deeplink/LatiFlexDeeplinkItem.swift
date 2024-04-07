@@ -18,7 +18,7 @@ final class LatiFlexDeeplinkItem: LatiFlexItemInterface {
     private let firstWindow = UIApplication.shared.windows.first
 
     var image: UIImage? {
-        UIImage(named: Constant.deeplinkImageName)
+        UIImage(named: Constant.deeplinkImageName, in: .main, with: .none)
     }
     
     func didSelectItem() {

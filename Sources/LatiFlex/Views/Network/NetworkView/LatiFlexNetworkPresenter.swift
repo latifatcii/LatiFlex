@@ -88,12 +88,12 @@ extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
         view?.prepareUI()
         filteredNetworkModels = latiFlexNetworkModels()
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
-                                               bundle: .module),
+                                               bundle: .main),
                                  position: .left,
                                  target: self,
                                  selector: #selector(closeButtonTapped))
         view?.setCustomBarButton(style: .image(image: Constant.deleteIconImage,
-                                               bundle: .module),
+                                               bundle: .main),
                                  position: .right,
                                  target: self,
                                  selector: #selector(deleteButtonTapped))

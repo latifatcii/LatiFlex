@@ -18,7 +18,7 @@ final class LatiFlexEventsItem: LatiFlexItemInterface {
     private let firstWindow = UIApplication.shared.windows.first
 
     var image: UIImage? {
-        UIImage(named: Constant.eventsImageName)
+        UIImage(named: Constant.eventsImageName, in: .main, with: .none)
     }
     
     func didSelectItem() {

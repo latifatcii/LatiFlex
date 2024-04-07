@@ -18,7 +18,7 @@ final class LatiFlexNetworkItem: LatiFlexItemInterface {
     private let firstWindow = UIApplication.shared.windows.first
 
     var image: UIImage? {
-        UIImage(named: Constant.networkImageView)
+        UIImage(named: Constant.networkImageView, in: .main, with: .none)
     }
     
     func didSelectItem() {

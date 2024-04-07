@@ -61,7 +61,7 @@ extension LatiFlexDeeplinkPresenter: LatiFlexDeeplinkPresenterInterface {
     func viewDidLoad() {
         view?.prepareUI()
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
-                                               bundle: .module),
+                                               bundle: .main),
                                  position: .left,
                                  target: self,
                                  selector: #selector(closeButtonTapped))

@@ -9,7 +9,7 @@ import UIKit
 
 final class LatiFlexEmptyItem: LatiFlexItemInterface {
     var image: UIImage? {
-        UIImage(named: "latiflex")
+        UIImage(named: "latiflex", in: .main, with: .none)
     }
     
     func didSelectItem() {}

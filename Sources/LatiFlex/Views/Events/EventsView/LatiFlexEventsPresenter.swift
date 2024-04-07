@@ -72,12 +72,12 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
         view?.prepareUI()
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == Events.Adjust.rawValue }
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
-                                               bundle: .module),
+                                               bundle: .main),
                                  position: .left,
                                  target: self,
                                  selector: #selector(closeButtonTapped))
         view?.setCustomBarButton(style: .image(image: Constant.deleteIconImage,
-                                               bundle: .module),
+                                               bundle: .main),
                                  position: .right,
                                  target: self,
                                  selector: #selector(deleteButtonTapped))
