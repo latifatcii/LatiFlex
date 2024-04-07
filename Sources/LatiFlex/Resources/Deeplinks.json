@@ -1,0 +1,458 @@
+{
+    "deeplinkList": [
+        {
+            "domainName": "Trendyol",
+            "deeplinks": [
+                {
+                    "name": "Account Change Country",
+                    "deeplink": "ty://?&Page=CountryList"
+                },
+                {
+                    "name": "Account",
+                    "deeplink": "ty://?Page=Account"
+                },
+                {
+                    "name": "Boutique Detail",
+                    "deeplink": "ty://?Page=Boutique&CampaignId=307337"
+                },
+                {
+                    "name": "Browsing History",
+                    "deeplink": "ty://?Page=BrowsingHistory"
+                },
+                {
+                    "name": "Buy Again",
+                    "deeplink": "ty://?Page=BuyAgain"
+                },
+                {
+                    "name": "Category Menu",
+                    "deeplink": "ty://?Page=CategoryMenu"
+                },
+                {
+                    "name": "Change Email",
+                    "deeplink": "ty://?Page=ChangeEmail"
+                },
+                {
+                    "name": "Change Wallet Phone Number",
+                    "deeplink": "ty://?Page=ChangeWalletPhoneNumber"
+                },
+                {
+                    "name": "Close Assistant",
+                    "deeplink": "ty://?Page=CloseAssistant"
+                },
+                {
+                    "name": "Close Digital Services",
+                    "deeplink": "ty://?Page=CloseDigitalServices"
+                },
+                {
+                    "name": "Close Influencer Center",
+                    "deeplink": "ty://?Page=CloseInfluencerCenter"
+                },
+                {
+                    "name": "Close Seller QA",
+                    "deeplink": "ty://?Page=CloseSellerQA"
+                }
+            ]
+        },
+      {
+            "domainName": "MBrowsing",
+            "deeplinks": [
+                {
+                    "name": "Homepage Section ID",
+                    "deeplink": "ty://?Page=Home&SectionId=10"
+                },
+                {
+                    "name": "Video Listing",
+                    "deeplink": " ty://?Page=VideoListing&Tags=Video"
+                },
+                {
+                    "name": "Category Tree",
+                    "deeplink": "ty://?Page=CategoryTree"
+                },
+                {
+                    "name": "Category Tree Subtype",
+                    "deeplink": "ty://?Page=CategoryTree&Subtype=categories"
+                },
+              {
+                    "name": "Favorites",
+                    "deeplink": "ty://?Page=Favorite"
+                },
+                {
+                    "name": "Favorites Discounted Price",
+                    "deeplink": "ty://?Page=Favorite&DiscountedPrice=true"
+                },
+                {
+                    "name": "Favorites Coupons",
+                    "deeplink": "ty://?Page=Favorite&Coupon=true"
+                },
+                {
+                    "name": "Favorites Price Badge",
+                    "deeplink": "ty://?Page=Favorite&PriceBadge=true"
+                },
+                {
+                    "name": "My Collections",
+                    "deeplink": "tty://?Page=MyCollections"
+                },
+                {
+                    "name": "Followed Collections",
+                    "deeplink": "ty://?Page=FollowedCollections"
+                },
+                {
+                    "name": "Review Image Listing",
+                    "deeplink": "ty://?Page=ReviewImageListing&DataKey=homepageImageReviews_v1a"
+                },
+                {
+                    "name": "Influencer Profile Page",
+                    "deeplink": "ty://?Page=InfluencerProfilePage&InfluencerId=13362"
+                },
+                {
+                    "name": "Collection Discovery",
+                    "deeplink": "ty://?Page=CollectionDiscovery&CollectionGroupName=sedaerdim"
+                },
+                {
+                    "name": "Followed Influencers",
+                    "deeplink": "ty://?Page=FollowedInfluencers"
+                },
+                {
+                    "name": "Browsing History",
+                    "deeplink": "ty://?Page=BrowsingHistory"
+                },
+                {
+                    "name": "Inner Widget",
+                    "deeplink": "ty://?Page=InnerWidget&Name=product_widget&Title=product_widget"
+                },
+                {
+                    "name": "Similar Products",
+                    "deeplink": "ty://?Page=SimilarProducts"
+                },
+                {
+                    "name": "Similar Products With Variant",
+                    "deeplink": "ty://?Page=SimilarProducts&ContentId=199642130&version=1&adsVersion=1&variant=40&variantName=Beden&webBrandId=41"
+                },
+                {
+                    "name": "Category Top Ranking",
+                    "deeplink": "ty://?Page=MultiCategoryTopRanking&Type=bestSeller&WebGenderId=1"
+                },
+                {
+                    "name": "Just For You",
+                    "deeplink": "ty://?Page=JustForYou"
+                },
+                {
+                    "name": "Kesfet",
+                    "deeplink": "ty://?Page=InnerWidget&Name=homepage_feed&Title=Kesfet"
+                }
+            ]
+        },
+      {
+            "domainName": "MSearch",
+            "deeplinks": [
+                {
+                    "name": "Search Result",
+                    "deeplink": "ty://?Page=Search&Query=Elbise"
+                },
+                {
+                    "name": "Flash Sale",
+                    "deeplink": " ty://?Page=FlashSale"
+                },
+                {
+                    "name": "Seller Store",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=108112"
+                },
+                {
+                    "name": "Seller Store All Products",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=157&Section=2"
+                },
+                {
+                    "name": "Seller Profile",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=157&Section=3"
+                },
+                {
+                    "name": "Seller Store Redirect",
+                    "deeplink": "ty://?MerchantIds=63&Page=Search&RedirectToSellerStore=true"
+                },
+                {
+                    "name": "Coupons",
+                    "deeplink": "ty://?Page=Coupons"
+                },
+                {
+                    "name": "Coupon Landing",
+                    "deeplink": "ty://?CouponId=2e756f51-06b6-4c09-bf64-9d3f84db5212&MerchantIds=320351&Page=CouponLanding"
+                },
+                {
+                    "name": "Coupon Landing Basket Price",
+                    "deeplink": "ty://?CouponId=2e756f51-06b6-4c09-bf64-9d3f84db5212&MerchantIds=320351&Page=CouponLanding&BasketPrice=50.0"
+                },
+                {
+                    "name": "Promotion Search",
+                    "deeplink": "ty://?Page=PromotionSearch&Promotions=7142300&BoostingGender=Erkek"
+                }
+            ]
+        },
+      {
+            "domainName": "International",
+            "deeplinks": [
+                {
+                    "name": "International",
+                    "deeplink": "ty://?Channel=International"
+                },
+                {
+                    "name": "INT Account",
+                    "deeplink": "ty://?Channel=International&Page=Account"
+                },
+                {
+                    "name": "INT Language Selection",
+                    "deeplink": "ty://?Channel=International&Page=LanguageSelection"
+                }
+            ]
+        },
+      {
+            "domainName": "DolapLite",
+            "deeplinks": [
+                {
+                    "name": "Homapage",
+                    "deeplink": "ty://?Channel=DolapLite&Page=HomePage"
+                },
+                {
+                    "name": "Homapage - Coupon",
+                    "deeplink": "ty://?Channel=DolapLite&CouponCampaignId=25002456"
+                },
+                {
+                    "name": "Discovery Homepage",
+                    "deeplink": "ty://?Channel=DolapLite&Page=DiscoveryHomepage"
+                },
+                {
+                    "name": "Just For You Homepage",
+                    "deeplink": "ty://?Channel=DolapLite&Page=JustForYouHomepage"
+                },
+                {
+                    "name": "Coupons",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Coupons&Tab=1"
+                },
+                {
+                    "name": "Basket Page",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Basket"
+                },
+                {
+                    "name": "Order Detail",
+                    "deeplink": "ty://?Channel=DolapLite&Page=OrderDetail&OrderId=25964269&ShowDismissButton=true"
+                },
+                {
+                    "name": "Product Detail",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Product&Id=3551"
+                },
+                {
+                    "name": "QuickSell Product Detail",
+                    "deeplink": "ty://?Channel=Dolaplite&Page=QuickSellProductDetail&ContentId=XXXX&ItemNumber=YYYY&PurchasePrice=21345&OrderId=12314&OrderItemId=12313"
+                },
+                {
+                    "name": "QuickSell On Sale Products",
+                    "deeplink": "ty://?Channel=DolapLite&Page=QuickSellOnSaleProducts"
+                },
+                {
+                    "name": "QuickSell",
+                    "deeplink": "ty://?Channel=DolapLite&Page=QuickSell"
+                },
+                {
+                    "name": "QuickSell - Quick Filter",
+                    "deeplink": "ty://?Channel=DolapLite&Page=QuickSell&QuickFilterKey=quickFilterId&QuickFilterValue=2"
+                },
+                {
+                    "name": "Search Result - Text Search",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&Query=elbise"
+                },
+                {
+                    "name": "Search Result - Brands",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&Brands=Adidas"
+                },
+                {
+                    "name": "Search Result - Merchant Id",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&MerchantIds=8096653"
+                },
+                {
+                    "name": "Search Result - Size",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&Sizes=136"
+                },
+                {
+                    "name": "Search Result - Price",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&Price=10-1000"
+                },
+                {
+                    "name": "Search Result - Free Cargo",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&FreeCargo=true"
+                },
+                {
+                    "name": "Search Result - Has Coupon",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&HasCoupon=true"
+                },
+                {
+                    "name": "Search Result - Has Promotion",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&HasPromotion=true"
+                },
+                {
+                    "name": "Search Result - Multi Category",
+                    "deeplink": "ty://?Channel=DolapLite&Page=Search&Categories=2_26507-2_26557-3_567-3_566&Source=FILTER"
+                },
+                {
+                    "name": "WebChat",
+                    "deeplink": "ty://?Channel=DolapLite&Page=WebChatBot&ChannelId={channelId}&ReturnPage=HomePage"
+                },
+                {
+                    "name": "Outweb",
+                    "deeplink": "ty://?Page=OutWeb&WebUrl=https://app.adjust.com/pyz5k5m_idycjd9?redirect=https://dolap.app.link/HQnmVXL2ilb&campaign=lite_ty_my_orders"
+                }
+            ]
+        },
+      {
+            "domainName": "Meal",
+            "deeplinks": [
+                {
+                    "name": "Meal Home",
+                    "deeplink": "ty://?Channel=Meal&Page=Home"
+                },
+                {
+                    "name": "Meal Orders",
+                    "deeplink": "ty://?Channel=Meal&Page=Orders"
+                },
+                {
+                    "name": "Meal Promotion List",
+                    "deeplink": "ty://?Channel=Meal&Page=PromotionListing"
+                },
+                {
+                    "name": "Meal Favorite List",
+                    "deeplink": "ty://?Channel=Meal&Page=FavoriteRestaurants"
+                },
+                {
+                    "name": "Meal Kitchens",
+                    "deeplink": "ty://?Channel=Meal&Page=Kitchens"
+                }
+            ]
+        },
+      {
+            "domainName": "Grocery",
+            "deeplinks": [
+                {
+                    "name": "Grocery Basket",
+                    "deeplink": "ty://?Channel=InstantDelivery&Page=Basket"
+                }
+            ]
+        },
+      {
+            "domainName": "Classified",
+            "deeplinks": [
+                
+            ]
+        },
+      {
+            "domainName": "Discovery",
+            "deeplinks": [
+                {
+                    "name": "Collectable Coupon",
+                    "deeplink": "ty://?Page=CollectableCoupon&WebUrl=https://m.trendyol.com/topla-kazan"
+                },
+                {
+                    "name": "Homepage Section 10",
+                    "deeplink": "ty://?Page=Home&SectionId=10"
+                },
+                {
+                    "name": "Homepage Section 12",
+                    "deeplink": "ty://?Page=Home&SectionId=12"
+                },
+                {
+                    "name": "Just For You",
+                    "deeplink": "ty://?Page=JustForYou"
+                },
+                {
+                    "name": "Browsing History",
+                    "deeplink": "ty://?Page=BrowsingHistory"
+                },
+                {
+                    "name": "Coupons",
+                    "deeplink": "ty://?Page=Coupons"
+                },
+                {
+                    "name": "Favorites",
+                    "deeplink": "ty://?Page=Favorite"
+                },
+                {
+                    "name": "Favorites Discounted Price",
+                    "deeplink": "ty://?Page=Favorite&DiscountedPrice=true"
+                },
+                {
+                    "name": "Favorites Coupons",
+                    "deeplink": "ty://?Page=Favorite&Coupon=true"
+                },
+                {
+                    "name": "Favorites Price Badge",
+                    "deeplink": "ty://?Page=Favorite&PriceBadge=true"
+                },
+                {
+                    "name": "Favorites Suggestions",
+                    "deeplink": "ty://?Page=FavoriteSuggestions"
+                },
+                {
+                    "name": "Inner Widget",
+                    "deeplink": "ty://?Page=InnerWidget&Name=product_widget&Title=product_widget"
+                },
+                {
+                    "name": "Flash Sale",
+                    "deeplink": "ty://?Page=FlashSale"
+                },
+                {
+                    "name": "Seller Store Section 1",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=63&Section=1"
+                },
+                {
+                    "name": "Seller Store Section 2",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=63&Section=2"
+                },
+                {
+                    "name": "Seller Store Section 3",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=63&Section=3"
+                },
+                {
+                    "name": "Seller Store Section 4",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=63&Section=4"
+                },
+                {
+                    "name": "Seller Store All Products",
+                    "deeplink": "ty://?Page=SellerStore&MerchantId=63&ShowAllProducts=true"
+                },
+                {
+                    "name": "Seller Store Redirect",
+                    "deeplink": "ty://?MerchantIds=63&Page=Search&RedirectToSellerStore=true"
+                },
+                {
+                    "name": "Video Listing",
+                    "deeplink": "ty://?Page=VideoListing&Tags=Video"
+                },
+                {
+                    "name": "Influencer Collection",
+                    "deeplink": "ty://?Page=CollectionList&CollectionGroupName=basakkarahan"
+                },
+                {
+                    "name": "My Collections",
+                    "deeplink": "ty://?Page=MyCollections"
+                },
+                {
+                    "name": "Followed Collections",
+                    "deeplink": "ty://?Page=FollowedCollections"
+                },
+                {
+                    "name": "Followed Influencers",
+                    "deeplink": "ty://?Page=FollowedInfluencers"
+                },
+                {
+                    "name": "Kesfet",
+                    "deeplink": "ty://?Page=InnerWidget&Name=homepage_feed&Title=Keşfet"
+                }
+            ]
+        },
+        {
+            "domainName": "Recents",
+            "deeplinks": [
+                
+            ]
+        }
+    ]
+}
+
+
