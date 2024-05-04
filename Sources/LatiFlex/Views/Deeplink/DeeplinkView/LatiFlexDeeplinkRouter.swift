@@ -19,11 +19,11 @@ final class LatiFlexDeeplinkRouter {
         self.navigationController = navigationController
     }
 
-    static func createModule(using navigationController: UINavigationController? = nil) -> UINavigationController {
+    static func createModule(using navigationController: UINavigationController? = nil, deeplinks: LatiFlexDeeplinksResponse) -> UINavigationController {
         let deeplinkVC = LatiFlexDeeplinkViewController()
         let deeplinkNC = UINavigationController(rootViewController: deeplinkVC)
         let router = LatiFlexDeeplinkRouter(with: deeplinkNC)
-        let deeplinkPresenter = LatiFlexDeeplinkPresenter(view: deeplinkVC, router: router)
+        let deeplinkPresenter = LatiFlexDeeplinkPresenter(view: deeplinkVC, router: router, deeplinks: deeplinks)
         deeplinkVC.presenter = deeplinkPresenter
         deeplinkNC.modalPresentationStyle = .popover
         

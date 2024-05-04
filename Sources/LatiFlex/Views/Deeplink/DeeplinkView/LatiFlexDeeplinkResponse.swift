@@ -6,7 +6,7 @@
 //  Copyright © 2022 Trendyol. All rights reserved.
 //
 
-final class LatiFlexDeeplinksResponse: Decodable {
+public final class LatiFlexDeeplinksResponse: Decodable {
     let deeplinkList: [Deeplinks]
     
     init(deeplinkList: [Deeplinks]) {
@@ -14,7 +14,7 @@ final class LatiFlexDeeplinksResponse: Decodable {
     }
 }
 
-final class Deeplinks: Decodable {
+public final class Deeplinks: Decodable {
     let domainName: String
     var deeplinks: [DeeplinkList]
     
@@ -24,7 +24,7 @@ final class Deeplinks: Decodable {
     }
 }
 
-final class DeeplinkList: Decodable {
+public final class DeeplinkList: Decodable {
     let name: String
     let deeplink: String
     

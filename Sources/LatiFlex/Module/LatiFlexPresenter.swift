@@ -46,13 +46,14 @@ public struct LatiFlexNetworkingModel {
 
 protocol LatiFlexPresenterInterface {
     var itemCount: Int { get }
+    var items: [LatiFlexItemInterface] { get set }
     
     func itemAt(index: Int) -> LatiFlexItemInterface?
-    func didSelectItemAt(index: Int)
+    func didSelectItemAt(index: Int, deeplinks: LatiFlexDeeplinksResponse?)
 }
 
 final class LatiFlexPresenter {
-    private let items: [LatiFlexItemInterface] = [LatiFlexEmptyItem(), LatiFlexDeeplinkItem(), LatiFlexEventsItem(), LatiFlexNetworkItem()]
+    var items: [LatiFlexItemInterface] = []
 }
 
 extension LatiFlexPresenter: LatiFlexPresenterInterface {
@@ -64,7 +65,11 @@ extension LatiFlexPresenter: LatiFlexPresenterInterface {
         items[index]
     }
     
-    func didSelectItemAt(index: Int) {
+    func didSelectItemAt(index: Int, deeplinks: LatiFlexDeeplinksResponse?) {
+        if items[index] is LatiFlexDeeplinkItem, let deeplinks = deeplinks {
+            items[index].didSelectItem(deeplinks: deeplinks)
+            return
+        }
         items[index].didSelectItem()
     }
 }

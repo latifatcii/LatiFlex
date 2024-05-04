@@ -11,6 +11,7 @@ public final class LatiFlex: LatiFlexInterface {
     var deeplinkList: [DeeplinkList] = []
     
     var presenter: LatiFlexPresenterInterface!
+    var deeplinks: LatiFlexDeeplinksResponse?
     
     private init() {
         presenter = LatiFlexPresenter()
@@ -27,7 +28,8 @@ public final class LatiFlex: LatiFlexInterface {
     
     private let firstWindow = UIApplication.shared.windows.first
     
-    public func show() {
+    public func show(items: [LatiFlexItemInterface] = []) {
+        presenter.items = [LatiFlexEmptyItem()] + items + [LatiFlexDeeplinkItem(), LatiFlexEventsItem(), LatiFlexNetworkItem()]
         let floatyView = LAFloaty(frame: .init(x: .zero, y: .zero, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         
         var rootHasFloatyView: Bool = false
@@ -64,6 +66,6 @@ extension LatiFlex: LAFloatyViewDatasource {
     }
     
     public func didSelectItem(at index: Int) {
-        presenter.didSelectItemAt(index: index)
+        presenter.didSelectItemAt(index: index, deeplinks: deeplinks)
     }
 }

@@ -21,12 +21,12 @@ final class LatiFlexDeeplinkItem: LatiFlexItemInterface {
         UIImage(named: Constant.deeplinkImageName, in: .module, with: .none)
     }
     
-    func didSelectItem() {
+    func didSelectItem(deeplinks: LatiFlexDeeplinksResponse) {
         if var topController = firstWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
-            let deeplinkNC = LatiFlexDeeplinkRouter.createModule()
+            let deeplinkNC = LatiFlexDeeplinkRouter.createModule(deeplinks: deeplinks)
             if UIDevice.current.userInterfaceIdiom == .pad {
                 deeplinkNC.modalPresentationStyle = .overFullScreen
             }

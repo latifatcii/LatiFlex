@@ -26,16 +26,17 @@ final class LatiFlexDeeplinkPresenter {
     private weak var view: LatiFlexDeeplinkViewInterface?
     private var router: LatiFlexDeeplinkRouterInterface
     
-    @LocalJson(.module, "Deeplinks")
     private var deeplinks: LatiFlexDeeplinksResponse
         
     private var deeplinkList: () -> [DeeplinkList]
     
     init(view: LatiFlexDeeplinkViewInterface?,
          router: LatiFlexDeeplinkRouterInterface,
+         deeplinks: LatiFlexDeeplinksResponse,
          deeplinkList: @escaping () -> [DeeplinkList] = { LatiFlex.shared.deeplinkList }) {
         self.view = view
         self.router = router
+        self.deeplinks = deeplinks
         self.deeplinkList = deeplinkList
     }
     

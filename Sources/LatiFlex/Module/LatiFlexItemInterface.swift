@@ -7,8 +7,14 @@
 
 import UIKit
 
-protocol LatiFlexItemInterface {
+public protocol LatiFlexItemInterface {
     var image: UIImage? { get }
     
     func didSelectItem()
+    func didSelectItem(deeplinks: LatiFlexDeeplinksResponse)
+}
+
+extension LatiFlexItemInterface {
+    func didSelectItem() { }
+    func didSelectItem(deeplinks: LatiFlexDeeplinksResponse) { }
 }
