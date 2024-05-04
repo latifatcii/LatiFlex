@@ -11,7 +11,7 @@ public final class LatiFlex: LatiFlexInterface {
     var deeplinkList: [DeeplinkList] = []
     
     var presenter: LatiFlexPresenterInterface!
-    var deeplinks: LatiFlexDeeplinksResponse?
+    public var deeplinks: LatiFlexDeeplinksResponse?
     
     private init() {
         presenter = LatiFlexPresenter()
