@@ -70,7 +70,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     
     func viewDidLoad() {
         view?.prepareUI()
-        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == Events.Adjust.rawValue }
+        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes.first ?? Events.Adjust.rawValue }
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
                                                bundle: .module),
                                  position: .left,
@@ -108,7 +108,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     
     func selectedSegmentChanged(index: Int) {
         selectedIndex = index
-        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == Events.allCases[index].rawValue }
+        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[index] }
         view?.reloadData()
     }
     
