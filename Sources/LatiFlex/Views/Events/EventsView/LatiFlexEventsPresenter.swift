@@ -60,7 +60,7 @@ final class LatiFlexEventPresenter {
     
     @objc private func deleteButtonTapped() {
         removeLatiFlexEvents([])
-        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == Events.allCases[selectedIndex].rawValue }
+        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[selectedIndex] }
         view?.reloadData()
     }
 }
@@ -81,7 +81,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
                                  position: .right,
                                  target: self,
                                  selector: #selector(deleteButtonTapped))
-        let items = Events.allCases.map { $0.rawValue }
+        let items = LatiFlex.shared.eventTypes.map { $0 }
         view?.prepareSegmentedControl(items: items)
     }
     

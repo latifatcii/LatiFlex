@@ -5,6 +5,7 @@ protocol LatiFlexInterface: AnyObject {}
 public final class LatiFlex: LatiFlexInterface {
     public static let shared = LatiFlex()
     public var events: [LatiFlexEvents] = []
+    public var eventTypes: [String] = []
     public var configurations: [String: String] = [:]
     public var setConfigCompletion: ((String, String) -> ())?
     var networkingModel: [LatiFlexNetworkingModel] = []
@@ -53,6 +54,10 @@ public final class LatiFlex: LatiFlexInterface {
             parameters: parameters
         )
         LatiFlex.shared.events.append(event)
+    }
+    
+    public func appendEventTypes(type: String) {
+        LatiFlex.shared.eventTypes.append(type)
     }
 }
 
