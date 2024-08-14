@@ -79,6 +79,10 @@ final class LatiFlexNetworkPresenter {
         guard let timeInterval = filteredNetworkModels[index].timeInterval else { return nil }
         return String(format: "%.3f sn", timeInterval)
     }
+    
+    private func curl(index: Int) -> String? {
+        filteredNetworkModels[index].request?.curlString
+    }
 }
 
 extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
@@ -104,7 +108,8 @@ extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
                                               statusCode: statusCodeAt(index: index),
                                               method: httpMethodAt(index: index),
                                               responseTime: responseTimeAt(index: index),
-                                              timeInterval: timeIntervalAt(index: index))
+                                              timeInterval: timeIntervalAt(index: index),
+                                              curl: curl(index: index))
     }
     
     func textDidChange(searchtext: String) {
