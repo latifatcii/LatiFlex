@@ -6,8 +6,11 @@
 //  Copyright © 2022 Trendyol. All rights reserved.
 //
 
+import Foundation
+
 protocol LatiFlexNetworkCellPresenterInterface {
     func load()
+    func copyCurlButtonTapped()
 }
 
 struct LatiFlexNetworkCellPresenterArguments {
@@ -16,6 +19,7 @@ struct LatiFlexNetworkCellPresenterArguments {
     let method: String?
     let responseTime: String?
     let timeInterval: String?
+    let curl: String?
 }
 
 final class LatiFlexNetworkCellPresenter {
@@ -41,6 +45,15 @@ extension LatiFlexNetworkCellPresenter: LatiFlexNetworkCellPresenterInterface {
             view?.setHttpContainerViewBackgrounColor(color: .orange)
         } else {
             view?.setHttpContainerViewBackgrounColor(color: .red)
+        }
+    }
+    
+    func copyCurlButtonTapped() {
+        view?.setTextToClipboard(argument.curl)
+        view?.prepareCopyCurlButtonForCopiedState()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.view?.prepareCopyCurlButtonForDefaultState()
         }
     }
 }

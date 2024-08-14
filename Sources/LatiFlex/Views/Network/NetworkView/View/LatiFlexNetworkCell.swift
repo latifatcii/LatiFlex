@@ -16,6 +16,9 @@ protocol LatiFlexNetworkCellInterface: AnyObject {
     func setResponseTimeLabel(text: String?)
     func setTimeIntervalLabel(text: String?)
     func setHttpContainerViewBackgrounColor(color: UIColor?)
+    func prepareCopyCurlButtonForDefaultState()
+    func prepareCopyCurlButtonForCopiedState()
+    func setTextToClipboard(_ text: String?)
 }
 
 private extension LatiFlexNetworkCell {
@@ -29,6 +32,12 @@ private extension LatiFlexNetworkCell {
         static let httpContainerViewWidthConstraints: CGFloat = 60
         static let containerStackViewSpacing: CGFloat = 10
         static let separatorViewHeightConstraint: CGFloat = 1
+        static let copiedText = "Copied!"
+        static let copyCurlText = "Copy cUrl"
+        static let copyButtonInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        static let copyButtonRadius = 8.0
+        static let copyButtonPadding = -8.0
+        static let copyButtonHeight = 24.0
     }
 }
 
@@ -87,6 +96,23 @@ final class LatiFlexNetworkCell: UICollectionViewCell {
         
         return separatorView
     }()
+    
+    private var curlButtonContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    private var copyCurlButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(Constant.copyCurlText, for: .normal)
+        button.setTitleColor(.orange, for: .normal)
+        button.backgroundColor = UIColor.orange.withAlphaComponent(0.3)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
+        button.layer.cornerRadius = Constant.copyButtonRadius
+        button.contentEdgeInsets = Constant.copyButtonInsets
+        return button
+    }()
 }
 
 extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
@@ -99,15 +125,23 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
         httpContainerView.widthAnchor.constraint(equalToConstant: Constant.httpContainerViewWidthConstraints).isActive = true
         httpStatusStackView.embedEdgeToEdge(in: httpContainerView)
 
-        let titleStackView = UIStackView(arrangedSubviews: [titleLabel, separatorView])
+        let titleStackView = UIStackView(arrangedSubviews: [titleLabel, curlButtonContainerView, separatorView])
+        titleStackView.spacing = 2
         titleStackView.axis = .vertical
         titleStackView.distribution = .fill
+        
+        copyCurlButton.embed(in: curlButtonContainerView, anchors: [
+            .top(.zero),
+            .bottom(.zero),
+            .trailing(Constant.copyButtonPadding),
+            .height(Constant.copyButtonHeight)
+        ])
+        copyCurlButton.addTarget(self, action: #selector(copyCurlButtonTapped), for: .touchUpInside)
         
         let containerStackView = UIStackView(arrangedSubviews: [httpContainerView, titleStackView])
         containerStackView.axis = .horizontal
         containerStackView.spacing = Constant.containerStackViewSpacing
         containerStackView.embedEdgeToEdge(in: self)
-        
         
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.heightAnchor.constraint(equalToConstant: Constant.separatorViewHeightConstraint).isActive = true
@@ -135,5 +169,25 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
     
     func setHttpContainerViewBackgrounColor(color: UIColor?) {
         httpContainerView.backgroundColor = color
+    }
+    
+    @objc private func copyCurlButtonTapped() {
+        presenter.copyCurlButtonTapped()
+    }
+    
+    func prepareCopyCurlButtonForDefaultState() {
+        copyCurlButton.setTitle(Constant.copyCurlText, for: .normal)
+        copyCurlButton.setTitleColor(.orange, for: .normal)
+        copyCurlButton.backgroundColor = UIColor.orange.withAlphaComponent(0.3)
+    }
+    
+    func prepareCopyCurlButtonForCopiedState() {
+        copyCurlButton.setTitle(Constant.copiedText, for: .normal)
+        copyCurlButton.setTitleColor(.systemGreen, for: .normal)
+        copyCurlButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.3)
+    }
+    
+    func setTextToClipboard(_ text: String?) {
+        UIPasteboard.general.string = text
     }
 }
