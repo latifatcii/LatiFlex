@@ -16,7 +16,7 @@ protocol LatiFlexNetworkViewInterface: AnyObject, NavigationBarCustomButtonConfi
 private extension LatiFlexNetworkViewController {
     enum Constant {
         static let minimumLineSpacing: CGFloat = 10
-        static let cellHeight: CGFloat = 50
+        static let cellHeight: CGFloat = 70
     }
 }
 
