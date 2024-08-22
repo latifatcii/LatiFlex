@@ -18,9 +18,9 @@ Installation
 
 To integrate LatiFlex into your Xcode project using Swift Package Manager, add it to the dependencies value of your  `Package.swift`:
 
-dependencies: [
-    .package(url: "https://github.com/latifatcii/LatiFlex", from: "1.0.8")
-]
+    dependencies: [
+        .package(url: "https://github.com/latifatcii/LatiFlex", from: "1.0.8")
+    ]
 
 ## Usage
 
