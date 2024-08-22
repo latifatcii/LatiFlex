@@ -42,9 +42,11 @@ extension LatiFlexNetworkCellPresenter: LatiFlexNetworkCellPresenterInterface {
         view?.setResponseTimeLabel(text: argument.responseTime)
         view?.setTimeIntervalLabel(text: argument.timeInterval)
         if (200...300).contains(argument.statusCode) {
-            view?.setHttpContainerViewBackgrounColor(color: .orange)
+            view?.setContainerStackViewColorToGreen()
+            view?.setStatusImage(symbolName: "checkmark.circle")
         } else {
-            view?.setHttpContainerViewBackgrounColor(color: .red)
+            view?.setContainerStackViewColorToRed()
+            view?.setStatusImage(symbolName: "exclamationmark.octagon")
         }
     }
     

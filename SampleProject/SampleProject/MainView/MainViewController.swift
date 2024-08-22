@@ -25,7 +25,11 @@ class MainViewController: UIViewController  {
         viewModel.tappedForRequest()
     }
     
-
+    @IBAction func tappedForBreakingNews(_ sender: Any) {
+        LatiFlex.shared.show()
+        viewModel.tappedForBreakingNews()
+    }
+    
 }
 
 extension MainViewController: MainViewModelDelegate {

@@ -15,8 +15,8 @@ protocol LatiFlexNetworkViewInterface: AnyObject, NavigationBarCustomButtonConfi
 
 private extension LatiFlexNetworkViewController {
     enum Constant {
-        static let minimumLineSpacing: CGFloat = 10
-        static let cellHeight: CGFloat = 70
+        static let minimumLineSpacing: CGFloat = 9
+        static let cellHeight: CGFloat = 80
     }
 }
 
@@ -47,6 +47,7 @@ extension LatiFlexNetworkViewController: LatiFlexNetworkViewInterface {
     var associatedNavigationItem: UINavigationItem { navigationItem }
     
     func prepareUI() {
+        collectionView.backgroundColor = .systemGray5
         collectionView.embedEdgeToEdge(in: view)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -80,7 +81,11 @@ extension LatiFlexNetworkViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: view.frame.width, height: Constant.cellHeight)
+        .init(width: view.frame.width - 16, height: Constant.cellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return .init(top: 2, left: 8, bottom: 2, right: 8)
     }
 }
 

@@ -9,6 +9,7 @@ import Foundation
 
 enum Endpoint {
     case articles(query: String)
+    case breakingNews (query: String)
 }
 
 enum HttpMethod: String {
@@ -26,6 +27,8 @@ extension Endpoint: EndpointProtocol {
         switch self {
         case .articles(let query):
             return "https://newsapi.org/v2/"
+        case .breakingNews(let query):
+            return "https://newsapi.org/v2/"
         }
     }
     
@@ -33,12 +36,15 @@ extension Endpoint: EndpointProtocol {
         switch self {
         case .articles(let query):
             return "everything?q=keyword\(query)"
+        case .breakingNews(let query):
+            return "top-headlines?country=us\(query)"
         }
     }
     
     var method: HttpMethod {
         switch self {
         case .articles: return .get
+        case .breakingNews: return .get
     }
 }
     
