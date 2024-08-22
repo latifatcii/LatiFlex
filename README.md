@@ -43,7 +43,7 @@ We welcome contributions! If you find a bug or have a feature request, please op
 
 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/latifatcii/LatiFlex/blob/main/LICENSE) file for details.
 
 Contact
 
