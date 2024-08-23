@@ -327,13 +327,18 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
     func prepareCopyCurlButtonForDefaultState() {
         copyCurlButton.setTitle(Constant.copyCurlText, for: .normal)
         copyCurlButton.setTitleColor(.orange, for: .normal)
-        copyCurlButton.backgroundColor = UIColor.orange.withAlphaComponent(0.3)
+        copyCurlButtonView.backgroundColor = .orange.withAlphaComponent(0.1)
+        copyCurlButtonView.layer.borderColor = UIColor.orange.withAlphaComponent(0.3).cgColor
+       // copyCurlButton.backgroundColor = UIColor.orange.withAlphaComponent(0.3)
     }
     
     func prepareCopyCurlButtonForCopiedState() {
         copyCurlButton.setTitle(Constant.copiedText, for: .normal)
         copyCurlButton.setTitleColor(.systemGreen, for: .normal)
-        copyCurlButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.3)
+      //  copyCurlButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.3)
+        copyCurlButtonView.backgroundColor = Constant.customGreen.withAlphaComponent(0.1)
+        copyCurlButtonView.layer.borderColor = Constant.customGreen.cgColor
+        
     }
     
     func setTextToClipboard(_ text: String?) {
