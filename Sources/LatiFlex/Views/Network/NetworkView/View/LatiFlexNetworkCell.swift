@@ -258,6 +258,8 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
         containerStackView.setContentHuggingPriority(.defaultLow, for: .vertical)
         imageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
         timeImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        timeImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         containerStackView.embed(in: responseTimeView, anchors: [
             .top(.zero),
             .bottom(.zero),
@@ -273,6 +275,7 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
         httpStatusStackView.setContentHuggingPriority(.defaultLow, for: .vertical)
         httpMethodLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         responseTimeImageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        responseTimeImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         timeIntervalLabel.widthAnchor.constraint(equalToConstant: 75).isActive = true
         copyCurlView.widthAnchor.constraint(equalToConstant: 95).isActive = true
         httpStatusStackView.embed(in: httpStatusView, anchors: [
@@ -285,10 +288,13 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
         let mainStackView = UIStackView(arrangedSubviews: [responseTimeView,titleView, httpStatusView])
         mainStackView.spacing = 2
         mainStackView.axis = .vertical
+        mainStackView.distribution = .fillProportionally
         mainStackView.embedEdgeToEdge(in: self)
         mainStackView.backgroundColor = .white
         mainStackView.layer.cornerRadius = 10
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
+        responseTimeView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        httpStatusView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         copyCurlButton.addTarget(self, action: #selector(copyCurlButtonTapped), for: .touchUpInside)
         
