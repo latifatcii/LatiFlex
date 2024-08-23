@@ -90,7 +90,12 @@ extension LatiFlexNetworkViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension LatiFlexNetworkViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        presenter.textDidChange(searchtext: searchBar.text ?? "")
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.textDidChange(searchtext: searchText)
+        presenter.clearbutton(searchText: searchText)
     }
 }

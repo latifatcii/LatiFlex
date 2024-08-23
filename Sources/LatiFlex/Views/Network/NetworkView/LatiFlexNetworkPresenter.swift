@@ -14,6 +14,7 @@ protocol LatiFlexNetworkPresenterInterface {
     func viewDidLoad()
     func argumentAt(index: Int) -> LatiFlexNetworkCellPresenterArguments
     func textDidChange(searchtext: String)
+    func clearbutton(searchText: String)
     func didSelectItem(at index: Int)
 }
 
@@ -30,6 +31,7 @@ final class LatiFlexNetworkPresenter {
     private var latiFlexNetworkModels: () -> [LatiFlexNetworkingModel]
     private var filteredNetworkModels: [LatiFlexNetworkingModel] = []
     private var removeLatiFlexNetworkModels: ([LatiFlexNetworkingModel]) -> ()
+    private var isSearching: Bool = false
     private let dateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm:ss.SSS"
@@ -88,6 +90,7 @@ final class LatiFlexNetworkPresenter {
 extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
     var numberOfItems: Int { filteredNetworkModels.count }
     
+    
     func viewDidLoad() {
         view?.prepareUI()
         filteredNetworkModels = latiFlexNetworkModels()
@@ -113,6 +116,7 @@ extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
     }
     
     func textDidChange(searchtext: String) {
+        isSearching = true
         guard !searchtext.isEmpty else {
             filteredNetworkModels = latiFlexNetworkModels()
             view?.reloadData()
@@ -125,6 +129,14 @@ extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
             return false
         }
         view?.reloadData()
+    }
+    
+    func clearbutton(searchText: String) {
+        if searchText.isEmpty {
+            isSearching = false
+            filteredNetworkModels = latiFlexNetworkModels()
+            view?.reloadData()
+        }
     }
     
     func didSelectItem(at index: Int) {
