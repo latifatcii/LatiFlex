@@ -252,7 +252,6 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
        
         let containerStackView = UIStackView(arrangedSubviews: [imageView, httpStatusLabel, emptyView,timeImageView, responseTimeLabel ])
         containerStackView.axis = .horizontal
-       // containerStackView.distribution = .fill
         containerStackView.spacing = Constant.containerStackViewSpacing
         containerStackView.backgroundColor = .white
         containerStackView.layer.cornerRadius = 10
@@ -268,7 +267,6 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
         
         let httpStatusStackView = UIStackView(arrangedSubviews: [httpMethodLabel,responseTimeImageView, timeIntervalLabel,secondEmptyView,copyCurlView ])
         httpStatusStackView.axis = .horizontal
-       // httpStatusStackView.distribution = .fill
         httpStatusStackView.alignment = .center
         httpStatusStackView.layer.cornerRadius = 10
         httpStatusStackView.backgroundColor = .white
@@ -287,7 +285,6 @@ extension LatiFlexNetworkCell: LatiFlexNetworkCellInterface {
         let mainStackView = UIStackView(arrangedSubviews: [responseTimeView,titleView, httpStatusView])
         mainStackView.spacing = 2
         mainStackView.axis = .vertical
-        mainStackView.distribution = .fill
         mainStackView.embedEdgeToEdge(in: self)
         mainStackView.backgroundColor = .white
         mainStackView.layer.cornerRadius = 10
