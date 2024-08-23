@@ -13,7 +13,7 @@ protocol LatiFlexNetworkPresenterInterface {
     
     func viewDidLoad()
     func argumentAt(index: Int) -> LatiFlexNetworkCellPresenterArguments
-    func textDidChange(searchtext: String)
+    func searchBarSerachButtonClicked(searchtext: String)
     func clearbutton(searchText: String)
     func didSelectItem(at index: Int)
 }
@@ -115,7 +115,7 @@ extension LatiFlexNetworkPresenter: LatiFlexNetworkPresenterInterface {
                                               curl: curl(index: index))
     }
     
-    func textDidChange(searchtext: String) {
+    func searchBarSerachButtonClicked(searchtext: String) {
         isSearching = true
         guard !searchtext.isEmpty else {
             filteredNetworkModels = latiFlexNetworkModels()
