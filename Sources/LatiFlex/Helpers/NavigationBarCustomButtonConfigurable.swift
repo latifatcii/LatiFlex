@@ -10,6 +10,7 @@ import UIKit
 protocol NavigationBarCustomButtonConfigurable {
     var associatedNavigationItem: UINavigationItem { get }
 
+    func removeCustomBarButton(on position: UINavigationItem.CustomBarButtonPosition)
     func setCustomBarButton(style: UINavigationItem.CustomBarButtonStyle, position: UINavigationItem.CustomBarButtonPosition, target: Any?, selector: Selector)
 }
 
@@ -41,5 +42,18 @@ extension NavigationBarCustomButtonConfigurable {
         }
 
         associatedNavigationItem.setBarButtonOnPosition(barButton: barButtonItem, position: position)
+    }
+    
+    func removeCustomBarButton(on position: UINavigationItem.CustomBarButtonPosition) {
+        switch position {
+        case .left:
+            associatedNavigationItem.leftBarButtonItem = nil
+            associatedNavigationItem.leftBarButtonItems = nil
+        case .right:
+            associatedNavigationItem.rightBarButtonItem = nil
+            associatedNavigationItem.rightBarButtonItems = nil
+        case .center:
+            associatedNavigationItem.titleView = nil
+        }
     }
 }

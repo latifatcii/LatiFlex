@@ -19,6 +19,7 @@ protocol LatiFlexNetworkDetailPresenterInterface {
 private extension LatiFlexNetworkDetailPresenter {
     enum Constant {
         static let copyCurlString: String = "Copy Curl"
+        static let copiedCurlString: String = "Copied The Curl"
         static let responseString: String = "Response"
         static let fontSize: Double = 17
     }
@@ -52,6 +53,13 @@ final class LatiFlexNetworkDetailPresenter {
     
     @objc private func copyCurlButtonTapped() {
         guard let curl = networkModel?.request?.curlString else { return }
+        view?.removeCustomBarButton(on: .center)
+        view?.setCustomBarButton(style: .textWithUIColor(color: .systemGreen,
+                                                         font: .systemFont(ofSize: Constant.fontSize, weight: .semibold),
+                                                         title: Constant.copiedCurlString),
+                                 position: .center,
+                                 target: self,
+                                 selector: #selector(copyCurlButtonTapped))
         view?.setToPasteboard(curl)
     }
 }

@@ -57,7 +57,7 @@ final class LatiFlexCell: UICollectionViewCell {
 extension LatiFlexCell: LatiFlexCellInterface {
     func prepareUI() {
         detailLabel.isEditable = false
-        self.layer.cornerRadius = 10
+        self.layer.cornerRadius = 6
         self.backgroundColor = .white
         
         let stackView = UIStackView(arrangedSubviews: [titleLabel, separatorView, detailLabel])

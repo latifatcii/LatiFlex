@@ -12,11 +12,13 @@ class MainViewController: UIViewController  {
 
     var viewModel: MainViewModelProtocol = MainViewModel() 
         
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
+        LatiFlex.shared.appendEventTypes(type: "Firebase")
+        LatiFlex.shared.appendEventTypes(type: "Facebook")
+        LatiFlex.shared.appendEventTypes(type: "Adjust")
+        LatiFlex.shared.appendEvents(type: "Firebase", name: "Mock Event", parameters: ["mock event parameter": "Mock Event 123"])
     }
    
    
