@@ -31,6 +31,7 @@ final class LatiFlexNetworkDetailPresenter {
     private var items: [String: String]? {
         var httpHeaders = networkModel?.request?.allHTTPHeaderFields
         httpHeaders?["Url"] = networkModel?.request?.url?.absoluteString
+        httpHeaders?["HTTP Body"] = try? networkModel?.request?.httpBodyStream?.readData().prettyPrintedString
         return httpHeaders
     }
     private var keys: [String]?

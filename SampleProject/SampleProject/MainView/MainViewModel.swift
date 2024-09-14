@@ -49,7 +49,33 @@ class MainViewModel {
                 break
             }
         }
+        
+        NetworkManager.shared.postArticle(data: articleData) { responseData in
+            switch responseData {
+            case .success(let responseData):
+                self.breakingNews = responseData.articles
+                print(responseData)
+                break
+            case .failure(let error):
+                print(error)
+                break
+            }
+        }
     }
+    
+    let articleData: [String: Any] = [
+        "title": "Breaking News: Swift is awesome!",
+        "description": "In this article, we discuss why Swift is such a powerful and modern programming language.",
+        "author": "John Doe",
+        "publishedAt": "2024-09-14T10:00:00Z",
+        "source": [
+            "id": "swift-news",
+            "name": "Swift News"
+        ],
+        "url": "https://example.com/swift-news",
+        "content": "Here is the full content of the article..."
+    ]
+
 }
 
 extension MainViewModel: MainViewModelProtocol {

@@ -43,4 +43,10 @@ class NetworkManager {
         let endpoint = Endpoint.breakingNews(query: "&apiKey=3981648866734d75902b4b10fc53ff32")
         request(endpoint, completion: completion)
     }
+    
+    func postArticle(data: [String: Any], completion: @escaping (Swift.Result<Welcome, Error>) -> Void) -> Void {
+        let endpoint = Endpoint.postArticle(data: data)
+        request(endpoint, completion: completion)
+    }
+
 }
