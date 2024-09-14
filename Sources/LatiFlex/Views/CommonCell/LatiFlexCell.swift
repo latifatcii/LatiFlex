@@ -21,6 +21,7 @@ private extension LatiFlexCell {
         static let detailLabelFontSize: CGFloat = 12
         static let stackViewLeadingConstraint: CGFloat = 10
         static let separatorViewHeight: CGFloat = 1
+        static let responseViewFontSize: CGFloat = 12
     }
 }
 
@@ -39,12 +40,10 @@ final class LatiFlexCell: UICollectionViewCell {
         return titleLabel
     }()
     
-    private var detailLabel: UILabel = {
-        let detailLabel = UILabel()
-        detailLabel.font = .systemFont(ofSize: Constant.detailLabelFontSize)
-        detailLabel.numberOfLines = .zero
-        detailLabel.textColor = .black
-        return detailLabel
+    private let detailLabel: UITextView = {
+        let responseView = UITextView()
+        responseView.font = .systemFont(ofSize: Constant.responseViewFontSize)
+        return responseView
     }()
     
     private var separatorView: UIView = {
@@ -58,6 +57,7 @@ final class LatiFlexCell: UICollectionViewCell {
 extension LatiFlexCell: LatiFlexCellInterface {
     func prepareUI() {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, detailLabel, separatorView])
+        detailLabel.isEditable = false
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.embed(in: self,
