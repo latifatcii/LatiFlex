@@ -35,7 +35,7 @@ class NetworkManager {
     }
     
     func getArticles (completion: @escaping (Swift.Result<Welcome , Error>) ->Void) -> Void {
-        let endpoint = Endpoint.articles(query: "&apiKey=3981648866734d75902b4b10fc53ff322")
+        let endpoint = Endpoint.articles(query: "&apiKey=3981648866734d75902b4b10fc53ff32")
         request(endpoint, completion: completion)
     }
     
