@@ -20,7 +20,7 @@ private extension LatiFlexCell {
         static let titleLabelFontSize: CGFloat = 16
         static let detailLabelFontSize: CGFloat = 12
         static let stackViewLeadingConstraint: CGFloat = 10
-        static let separatorViewHeight: CGFloat = 1
+        static let separatorViewHeight: CGFloat = 0.5
     }
 }
 
@@ -50,14 +50,17 @@ final class LatiFlexCell: UICollectionViewCell {
     private var separatorView: UIView = {
         let separatorView = UIView()
         separatorView.backgroundColor = .lightGray
-        
         return separatorView
     }()
+    
 }
 
 extension LatiFlexCell: LatiFlexCellInterface {
     func prepareUI() {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, detailLabel, separatorView])
+        self.layer.cornerRadius = 10
+        self.backgroundColor = .white
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, separatorView, detailLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.embed(in: self,
@@ -68,7 +71,7 @@ extension LatiFlexCell: LatiFlexCellInterface {
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.heightAnchor.constraint(equalToConstant: Constant.separatorViewHeight).isActive = true
     }
-    
+
     func setTitleLabel(text: String?) {
         titleLabel.text = text
     }

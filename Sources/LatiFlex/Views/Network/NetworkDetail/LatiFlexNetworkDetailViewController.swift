@@ -15,10 +15,10 @@ protocol LatiFlexNetworkDetailViewInterface: AnyObject, NavigationBarCustomButto
 
 private extension LatiFlexNetworkDetailViewController {
     enum Constant {
-        static let responseViewFontSize: CGFloat = 12
-        static let minimumLineSpacing: CGFloat = 10
+        static let responseViewFontSize: CGFloat = 10
+        static let minimumLineSpacing: CGFloat = 9
         static let textOfHeightFontSize: CGFloat = 12
-        static let heightPadding: CGFloat = 30
+        static let heightPadding: CGFloat = 40
     }
 }
 
@@ -28,6 +28,7 @@ final class LatiFlexNetworkDetailViewController: UIViewController {
     private let responseView: UITextView = {
         let responseView = UITextView()
         responseView.font = .systemFont(ofSize: Constant.responseViewFontSize)
+        responseView.textColor = .orange
         return responseView
     }()
     
@@ -50,7 +51,8 @@ extension LatiFlexNetworkDetailViewController: LatiFlexNetworkDetailViewInterfac
     var associatedNavigationItem: UINavigationItem { navigationItem }
     
     func prepareUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray5
+        collectionView.backgroundColor = .systemGray5
         collectionView.embedEdgeToEdge(in: view)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -81,7 +83,7 @@ extension LatiFlexNetworkDetailViewController: UICollectionViewDelegateFlowLayou
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let textHeight = presenter.valueAt(index: indexPath.item)?.heightOfText(withConstrainedWidth: collectionView.frame.width,
                                                                                 font: .systemFont(ofSize: Constant.textOfHeightFontSize)) ?? .zero
-        return .init(width: collectionView.frame.width, height: textHeight + Constant.heightPadding)
+        return .init(width: collectionView.frame.width - 16, height: textHeight + Constant.heightPadding)
     }
 }
 
