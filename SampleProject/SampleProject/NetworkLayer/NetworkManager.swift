@@ -18,7 +18,6 @@ class NetworkManager {
             if let error = error {
                 print(error)
             }
-            if let response = response as? HTTPURLResponse {}
             
             if let data = data {
                 do {

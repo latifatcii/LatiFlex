@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,36 +16,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tSd-z6-7y3">
-                                <rect key="frame" x="159" y="409" width="89.333333333333314" height="35"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="9JA-iO-Di2">
+                                <rect key="frame" x="146.66666666666666" y="321" width="100" height="210"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tSd-z6-7y3">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                        <color key="tintColor" red="0.34654983195450634" green="0.77241161616161613" blue="0.38502709338097202" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Click Me"/>
+                                        <connections>
+                                            <action selector="tappedForRequest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lTv-OQ-ywp"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NbO-Io-QlA">
+                                        <rect key="frame" x="0.0" y="110" width="100" height="100"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Click Me"/>
+                                        <connections>
+                                            <action selector="tappedForBreakingNews:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vrx-0T-wjS"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="peS-An-ZnD"/>
-                                    <constraint firstAttribute="width" constant="89.329999999999998" id="x16-p3-f33"/>
+                                    <constraint firstAttribute="width" constant="100" id="8od-1v-qyH"/>
+                                    <constraint firstAttribute="height" constant="210" id="SLv-b7-Ntt"/>
                                 </constraints>
-                                <color key="tintColor" red="0.34654983195450634" green="0.77241161616161613" blue="0.38502709338097202" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="tinted" title="Click Me"/>
-                                <connections>
-                                    <action selector="tappedForRequest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lTv-OQ-ywp"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NbO-Io-QlA">
-                                <rect key="frame" x="159" y="477" width="90" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="tinted" title="Click Me"/>
-                                <connections>
-                                    <action selector="tappedForBreakingNews:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vrx-0T-wjS"/>
-                                </connections>
-                            </button>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="tSd-z6-7y3" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="350" id="Jn8-8n-ENn"/>
-                            <constraint firstItem="tSd-z6-7y3" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="159" id="Ona-V4-wwq"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tSd-z6-7y3" secondAttribute="bottom" constant="374" id="gZK-xD-btw"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tSd-z6-7y3" secondAttribute="trailing" constant="144.66999999999999" id="or0-qD-EMX"/>
+                            <constraint firstItem="9JA-iO-Di2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AWT-BF-JED"/>
+                            <constraint firstItem="9JA-iO-Di2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="lGW-gv-wW0"/>
                         </constraints>
                     </view>
                 </viewController>

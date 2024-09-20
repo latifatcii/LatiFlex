@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF1DD33A2C9D6E4F00C2AA9B /* Deeplinks.json in Resources */ = {isa = PBXBuildFile; fileRef = CF1DD3392C9D6E3C00C2AA9B /* Deeplinks.json */; };
+		CF1DD33E2C9D6F6500C2AA9B /* LocalJsonDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1DD33D2C9D6F6100C2AA9B /* LocalJsonDecoder.swift */; };
 		FABC8C8B2C74C6D600ABED71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABC8C8A2C74C6D600ABED71 /* AppDelegate.swift */; };
 		FABC8C8D2C74C6D600ABED71 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABC8C8C2C74C6D600ABED71 /* SceneDelegate.swift */; };
 		FABC8C8F2C74C6D600ABED71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABC8C8E2C74C6D600ABED71 /* MainViewController.swift */; };
@@ -41,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CF1DD3392C9D6E3C00C2AA9B /* Deeplinks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Deeplinks.json; sourceTree = "<group>"; };
+		CF1DD33D2C9D6F6100C2AA9B /* LocalJsonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalJsonDecoder.swift; sourceTree = "<group>"; };
 		FABC8C872C74C6D600ABED71 /* SampleProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FABC8C8A2C74C6D600ABED71 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FABC8C8C2C74C6D600ABED71 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +113,8 @@
 		FABC8C892C74C6D600ABED71 /* SampleProject */ = {
 			isa = PBXGroup;
 			children = (
+				CF1DD33D2C9D6F6100C2AA9B /* LocalJsonDecoder.swift */,
+				CF1DD3392C9D6E3C00C2AA9B /* Deeplinks.json */,
 				FABC8CC12C74C8E600ABED71 /* MainView */,
 				FABC8CBA2C74C7DA00ABED71 /* NetworkLayer */,
 				FABC8C8A2C74C6D600ABED71 /* AppDelegate.swift */,
@@ -268,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FABC8C972C74C6D800ABED71 /* LaunchScreen.storyboard in Resources */,
+				CF1DD33A2C9D6E4F00C2AA9B /* Deeplinks.json in Resources */,
 				FABC8C942C74C6D800ABED71 /* Assets.xcassets in Resources */,
 				FABC8C922C74C6D600ABED71 /* Main.storyboard in Resources */,
 			);
@@ -298,6 +305,7 @@
 				FABC8CC02C74C89C00ABED71 /* NetworkManager.swift in Sources */,
 				FABC8C8F2C74C6D600ABED71 /* MainViewController.swift in Sources */,
 				FABC8C8B2C74C6D600ABED71 /* AppDelegate.swift in Sources */,
+				CF1DD33E2C9D6F6500C2AA9B /* LocalJsonDecoder.swift in Sources */,
 				FABC8CBC2C74C7F300ABED71 /* Endpoint.swift in Sources */,
 				FABC8CBE2C74C82100ABED71 /* News.swift in Sources */,
 				FABC8C8D2C74C6D600ABED71 /* SceneDelegate.swift in Sources */,

@@ -19,6 +19,12 @@ class MainViewController: UIViewController  {
         LatiFlex.shared.appendEventTypes(type: "Facebook")
         LatiFlex.shared.appendEventTypes(type: "Adjust")
         LatiFlex.shared.appendEvents(type: "Firebase", name: "Mock Event", parameters: ["mock event parameter": "Mock Event 123"])
+        
+        let deeplinks = try! LocalJsonDecoder.shared.read(for: LatiFlexDeeplinksResponse.self,
+                                                          withName: "Deeplinks",
+                                                          bundle: .main)
+        LatiFlex.shared.deeplinks = deeplinks
+        
     }
    
    

@@ -1,0 +1,37 @@
+{
+    "deeplinkList": [
+        {
+            "domainName": "Demo",
+            "deeplinks": [
+                {
+                    "name": "Account",
+                    "deeplink": "xx://?&Page=Home"
+                },
+                {
+                    "name": "Account 1",
+                    "deeplink": "aa://?Page=Account"
+                }
+            ]
+        },
+      {
+            "domainName": "Demo 2",
+            "deeplinks": [
+                {
+                    "name": "Account 2",
+                    "deeplink": "xx://?&Page=Home"
+                },
+                {
+                    "name": "Account 3",
+                    "deeplink": "aa://?Page=Account"
+                }
+            ]
+        },
+        {
+            "domainName": "Recents",
+            "deeplinks": [
+                
+            ]
+        }
+    ]
+}
+
