@@ -1,31 +1,31 @@
 //
-//  LatiFlexCell.swift
+//  LatiFlexNetworkDetailCell.swift
 //  LatiFlex
 //
-//  Created by Abdüllatif Atçı on 24.07.2022.
-//  Copyright © 2022 Trendyol. All rights reserved.
+//  Created by Latif Atci on 20.09.2024.
 //
 
 import UIKit
 
-protocol LatiFlexCellInterface: AnyObject {
+protocol LatiFlexNetworkDetailCellInterface: AnyObject {
     func prepareUI()
     func setTitleLabel(text: String?)
     func setDetailLabel(text: String?)
     func setDetailLabelVisibility(isHidden: Bool)
 }
 
-private extension LatiFlexCell {
+private extension LatiFlexNetworkDetailCell {
     enum Constant {
         static let titleLabelFontSize: CGFloat = 16
         static let detailLabelFontSize: CGFloat = 12
         static let stackViewLeadingConstraint: CGFloat = 10
-        static let separatorViewHeight: CGFloat = 1
+        static let responseViewFontSize: CGFloat = 12
+        static let separatorViewHeight: CGFloat = 0.5
     }
 }
 
-final class LatiFlexCell: UICollectionViewCell {
-    var presenter: LatiFlexCellPresenterInterface! {
+final class LatiFlexNetworkDetailCell: UICollectionViewCell {
+    var presenter: LatiFlexNetworkDetailCellPresenterInterface! {
         didSet {
             presenter.load()
         }
@@ -39,25 +39,27 @@ final class LatiFlexCell: UICollectionViewCell {
         return titleLabel
     }()
     
-    private var detailLabel: UILabel = {
-        let detailLabel = UILabel()
-        detailLabel.font = .systemFont(ofSize: Constant.detailLabelFontSize)
-        detailLabel.numberOfLines = .zero
-        detailLabel.textColor = .black
-        return detailLabel
+    private let detailLabel: UITextView = {
+        let responseView = UITextView()
+        responseView.font = .systemFont(ofSize: Constant.responseViewFontSize)
+        return responseView
     }()
     
     private var separatorView: UIView = {
         let separatorView = UIView()
         separatorView.backgroundColor = .lightGray
-        
         return separatorView
     }()
+    
 }
 
-extension LatiFlexCell: LatiFlexCellInterface {
+extension LatiFlexNetworkDetailCell: LatiFlexNetworkDetailCellInterface {
     func prepareUI() {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, detailLabel, separatorView])
+        detailLabel.isEditable = false
+        self.layer.cornerRadius = 6
+        self.backgroundColor = .white
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, separatorView, detailLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.embed(in: self,
@@ -68,7 +70,7 @@ extension LatiFlexCell: LatiFlexCellInterface {
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.heightAnchor.constraint(equalToConstant: Constant.separatorViewHeight).isActive = true
     }
-    
+
     func setTitleLabel(text: String?) {
         titleLabel.text = text
     }

@@ -37,7 +37,7 @@ final class LatiFlexNetworkDetailViewController: UIViewController {
         layout.minimumLineSpacing = Constant.minimumLineSpacing
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(LatiFlexCell.self, forCellWithReuseIdentifier: "LatiFlexCell")
+        collectionView.register(LatiFlexNetworkDetailCell.self, forCellWithReuseIdentifier: "LatiFlexNetworkDetailCell")
         collectionView.backgroundColor = .white
         return collectionView
     }()
@@ -67,9 +67,9 @@ extension LatiFlexNetworkDetailViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexCell", for: indexPath) as? LatiFlexCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexNetworkDetailCell", for: indexPath) as? LatiFlexNetworkDetailCell else { return UICollectionViewCell() }
 
-        let cellPresenter = LatiFlexCellPresenter(view: cell,
+        let cellPresenter = LatiFlexNetworkDetailCellPresenter(view: cell,
                                                   title: presenter.keyAt(index: indexPath.item),
                                                   detail: presenter.valueAt(index: indexPath.item))
         cell.presenter = cellPresenter
