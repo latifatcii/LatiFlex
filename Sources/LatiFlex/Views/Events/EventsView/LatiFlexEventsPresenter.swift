@@ -86,7 +86,8 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     }
     
     func didSelectItemAt(index: Int) {
-        router.presentEventDetail(eventParameters: itemAt(index: index)?.parameters)
+        guard case let .success(_, parameters) = itemAt(index: index)?.eventResult else { return }
+        router.presentEventDetail(eventParameters: parameters)
     }
     
     func itemAt(index: Int) -> LatiFlexEvents? {
@@ -94,14 +95,17 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     }
     
     func eventNameAt(index: Int) -> String? {
-        switch filteredLatiFlexEvents[index].eventType {
+        let event = filteredLatiFlexEvents[index]
+        guard case let .success(name, parameters) = event.eventResult else { return nil }
+
+        switch event.eventType {
         case Events.Firebase.rawValue:
-            guard let eventName = filteredLatiFlexEvents[index].parameters[Constant.firebaseCategoryParameterName] else { return nil }
+            guard let eventName = parameters[Constant.firebaseCategoryParameterName] as? String else { return nil }
             return eventName
         case Events.Demeter.rawValue:
-            return filteredLatiFlexEvents[index].name
+            return name
         default:
-            guard let eventName = filteredLatiFlexEvents[index].parameters[Constant.eventParameterName] else { return nil }
+            guard let eventName = parameters[Constant.eventParameterName] as? String else { return nil }
             return eventName
         }
     }
@@ -117,7 +121,11 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
             selectedSegmentChanged(index: selectedIndex)
             return
         }
-        filteredLatiFlexEvents = latiFlexEvents().filter { $0.parameters.keys.contains(searchtext) }
+        filteredLatiFlexEvents = latiFlexEvents().filter {
+            let eventResult = $0.eventResult
+            guard case let .success(_, parameters) = eventResult else { return false }
+            return parameters.keys.contains(searchtext)
+        }
         view?.reloadData()
     }
 }

@@ -29,7 +29,7 @@ final class LatiFlexNetworkDetailPresenter {
     private weak var view: LatiFlexNetworkDetailViewInterface?
     private let router: LatiFlexNetworkDetailRouterInterface
     private let networkModel: LatiFlexNetworkingModel?
-    private var items: [String: String]? {
+    private var items: [String: Any]? {
         var httpHeaders = networkModel?.request?.allHTTPHeaderFields
         httpHeaders?["Url"] = networkModel?.request?.url?.absoluteString
         httpHeaders?["HTTP Body"] = try? networkModel?.request?.httpBodyStream?.readData().prettyPrintedString
@@ -84,8 +84,8 @@ extension LatiFlexNetworkDetailPresenter: LatiFlexNetworkDetailPresenterInterfac
                                  target: self,
                                  selector: #selector(copyCurlButtonTapped))
         keys = items?.map { $0.key }
-        values = items?.map { $0.value }
-        
+        values = items?.compactMap { $0.value as? String }
+
     }
     
     func keyAt(index: Int) -> String? {

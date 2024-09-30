@@ -7,20 +7,23 @@
 
 import Foundation
 
+public enum LatiFlexEventResult {
+    case success(name: String, parameters: [String: Any])
+    case failure(Error)
+}
+
 public struct LatiFlexEvents {
-    let eventType: String
     let date: Date = Date()
-    let name: String?
-    let parameters: [String: String]
-    
+
+    let eventType: String
+    let eventResult: LatiFlexEventResult
+
     init(
         eventType: String,
-        name: String? = nil,
-        parameters: [String : String]
+        eventResult: LatiFlexEventResult
     ) {
         self.eventType = eventType
-        self.name = name
-        self.parameters = parameters
+        self.eventResult = eventResult
     }
 }
 

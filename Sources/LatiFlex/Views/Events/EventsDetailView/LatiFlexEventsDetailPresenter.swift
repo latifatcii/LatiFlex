@@ -16,11 +16,11 @@ protocol LatiFlexEventsDetailPresenterInterface {
 final class LatiFlexEventsDetailPresenter {
     private weak var view: LatiFlexEventsDetailViewInterface?
     private let router: LatiFlexEventsDetailRouterInterface
-    private let eventParameters: [String: String]?
-    
+    private let eventParameters: [String: Any]?
+
     init(view: LatiFlexEventsDetailViewInterface?,
          router: LatiFlexEventsDetailRouterInterface,
-         eventParameters: [String: String]?) {
+         eventParameters: [String: Any]?) {
         self.view = view
         self.router = router
         self.eventParameters = eventParameters

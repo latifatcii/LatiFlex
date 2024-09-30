@@ -19,7 +19,7 @@ final class LatiFlexEventsDetailRouter {
         self.navigationController = navigationController
     }
 
-    static func createModule(using navigationController: UINavigationController? = nil, eventParameters: [String: String]?) -> UIViewController {
+    static func createModule(using navigationController: UINavigationController? = nil, eventParameters: [String: Any]?) -> UIViewController {
         let detailVC = LatiFlexEventsDetailViewController()
         let router = LatiFlexEventsDetailRouter(with: navigationController)
         let detailPresenter = LatiFlexEventsDetailPresenter(view: detailVC,

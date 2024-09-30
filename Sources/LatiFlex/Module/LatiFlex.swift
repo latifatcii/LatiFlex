@@ -47,11 +47,10 @@ public final class LatiFlex: LatiFlexInterface {
         }
     }
     
-    public func appendEvents(type: String, name: String?, parameters: [String : String]) {
+    public func appendEvents(type: String, eventResult: LatiFlexEventResult) {
         let event = LatiFlexEvents(
             eventType: type,
-            name: name,
-            parameters: parameters
+            eventResult: eventResult
         )
         LatiFlex.shared.events.append(event)
     }

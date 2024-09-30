@@ -9,7 +9,7 @@
 import UIKit
 
 protocol LatiFlexEventsRouterInterface: RouterInterface {
-    func presentEventDetail(eventParameters: [String: String]?)
+    func presentEventDetail(eventParameters: [String: Any]?)
 }
 
 final class LatiFlexEventsRouter {
@@ -32,7 +32,7 @@ final class LatiFlexEventsRouter {
 }
 
 extension LatiFlexEventsRouter: LatiFlexEventsRouterInterface {
-    func presentEventDetail(eventParameters: [String: String]?) {
+    func presentEventDetail(eventParameters: [String: Any]?) {
         let detailVC = LatiFlexEventsDetailRouter.createModule(using: navigationController, eventParameters: eventParameters)
         navigationController?.pushViewController(detailVC, animated: true)
     }
