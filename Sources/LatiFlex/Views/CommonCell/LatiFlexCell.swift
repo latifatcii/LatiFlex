@@ -12,6 +12,7 @@ protocol LatiFlexCellInterface: AnyObject {
     func prepareUI()
     func setTitleLabel(text: String?)
     func setDetailLabel(text: String?)
+    func setDetailLabelTextColor(_ color: UIColor)
     func setDetailLabelVisibility(isHidden: Bool)
 }
 
@@ -30,15 +31,15 @@ final class LatiFlexCell: UICollectionViewCell {
             presenter.load()
         }
     }
-    
+
     private var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = .systemFont(ofSize: Constant.titleLabelFontSize)
-        
+
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return titleLabel
     }()
-    
+
     private var detailLabel: UILabel = {
         let detailLabel = UILabel()
         detailLabel.font = .systemFont(ofSize: Constant.detailLabelFontSize)
@@ -46,11 +47,11 @@ final class LatiFlexCell: UICollectionViewCell {
         detailLabel.textColor = .black
         return detailLabel
     }()
-    
+
     private var separatorView: UIView = {
         let separatorView = UIView()
         separatorView.backgroundColor = .lightGray
-        
+
         return separatorView
     }()
 }
@@ -68,16 +69,20 @@ extension LatiFlexCell: LatiFlexCellInterface {
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.heightAnchor.constraint(equalToConstant: Constant.separatorViewHeight).isActive = true
     }
-    
+
     func setTitleLabel(text: String?) {
         titleLabel.text = text
     }
-    
+
     func setDetailLabel(text: String?) {
         detailLabel.text = text
     }
-    
+
     func setDetailLabelVisibility(isHidden: Bool) {
         detailLabel.isHidden = isHidden
+    }
+
+    func setDetailLabelTextColor(_ color: UIColor) {
+        detailLabel.textColor = color
     }
 }

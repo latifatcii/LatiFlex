@@ -9,12 +9,12 @@
 import UIKit
 
 protocol LatiFlexEventsRouterInterface: RouterInterface {
-    func presentEventDetail(eventParameters: [String: String]?)
+    func presentEventDetail(eventParameters: [String: Any]?, eventError: Error?)
 }
 
 final class LatiFlexEventsRouter {
     weak var navigationController: UINavigationController?
-    
+
     init(with navigationController: UINavigationController?) {
         self.navigationController = navigationController
     }
@@ -26,14 +26,14 @@ final class LatiFlexEventsRouter {
         let eventPresenter = LatiFlexEventPresenter(view: eventVC, router: router)
         eventVC.presenter = eventPresenter
         eventNC.modalPresentationStyle = .popover
-        
+
         return eventNC
     }
 }
 
 extension LatiFlexEventsRouter: LatiFlexEventsRouterInterface {
-    func presentEventDetail(eventParameters: [String: String]?) {
-        let detailVC = LatiFlexEventsDetailRouter.createModule(using: navigationController, eventParameters: eventParameters)
+    func presentEventDetail(eventParameters: [String: Any]?, eventError: Error?) {
+        let detailVC = LatiFlexEventsDetailRouter.createModule(using: navigationController, eventParameters: eventParameters, eventError: eventError)
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }

@@ -14,13 +14,16 @@ final class LatiFlexCellPresenter {
     private weak var view: LatiFlexCellInterface?
     private let title: String?
     private let detail: String?
-    
+    private let isSuccess: Bool
+
     init(view: LatiFlexCellInterface?,
          title: String?,
-         detail: String?) {
+         detail: String?,
+         isSuccess: Bool = false) {
         self.view = view
         self.title = title
         self.detail = detail
+        self.isSuccess = isSuccess
     }
 }
 
@@ -29,6 +32,7 @@ extension LatiFlexCellPresenter: LatiFlexCellPresenterInterface {
         view?.prepareUI()
         view?.setTitleLabel(text: title)
         view?.setDetailLabel(text: detail)
+        view?.setDetailLabelTextColor(isSuccess ? .black : .red)
         view?.setDetailLabelVisibility(isHidden: detail?.isEmpty ?? true)
     }
 }

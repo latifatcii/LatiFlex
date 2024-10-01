@@ -16,29 +16,36 @@ protocol LatiFlexEventsDetailPresenterInterface {
 final class LatiFlexEventsDetailPresenter {
     private weak var view: LatiFlexEventsDetailViewInterface?
     private let router: LatiFlexEventsDetailRouterInterface
-    private let eventParameters: [String: String]?
-    
+    private let eventParameters: [String: Any]?
+    private let eventError: Error?
+
     init(view: LatiFlexEventsDetailViewInterface?,
          router: LatiFlexEventsDetailRouterInterface,
-         eventParameters: [String: String]?) {
+         eventParameters: [String: Any]?,
+         eventError: Error?) {
         self.view = view
         self.router = router
         self.eventParameters = eventParameters
+        self.eventError = eventError
     }
 }
 
 extension LatiFlexEventsDetailPresenter: LatiFlexEventsDetailPresenterInterface {
     func viewDidLoad() {
         view?.prepareUI()
-        view?.setEventParametersLabel(text: eventParameters?.prettyPrintedString)
+        if let eventParameters {
+            view?.setResponseViewText(text: eventParameters.prettyPrintedString)
+        } else if let eventError {
+            view?.setResponseViewText(text: String(describing: eventError))
+        }
     }
-    
+
     func textDidChange(searchtext: String) {
         guard let eventParameters = eventParameters, !searchtext.isEmpty, let boldAttr = view?.boldAttr, let prettyPrinted = eventParameters.prettyPrintedString else {
-            view?.setEventParametersLabel(text: eventParameters?.prettyPrintedString)
+            view?.setResponseViewText(text: eventParameters?.prettyPrintedString)
             return
         }
-        
+
         let suggestionAtt = NSMutableAttributedString(string: prettyPrinted)
         do {
             let regex = try NSRegularExpression(pattern: searchtext.lowercased(), options: .caseInsensitive)
@@ -47,9 +54,9 @@ extension LatiFlexEventsDetailPresenter: LatiFlexEventsDetailPresenterInterface 
             for match in matches {
                 suggestionAtt.addAttributes(boldAttr, range: match.range)
             }
-            view?.setEventParametersLabel(attributedText: suggestionAtt)
+            view?.setResponseViewText(attributedText: suggestionAtt)
         } catch {
-            view?.setEventParametersLabel(text: prettyPrinted)
+            view?.setResponseViewText(text: prettyPrinted)
         }
     }
 }
@@ -61,4 +68,3 @@ private extension Dictionary {
         return prettyPrintedString as String
     }
 }
-

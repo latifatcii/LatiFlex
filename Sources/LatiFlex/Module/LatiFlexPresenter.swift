@@ -7,20 +7,32 @@
 
 import Foundation
 
+public enum LatiFlexEventResult {
+    case success(name: String?, parameters: [String: Any])
+    case failure(Error)
+}
+
+public extension LatiFlexEventResult {
+    var isSuccess: Bool {
+        guard case .success = self else {
+            return false
+        }
+        return true
+    }
+}
+
 public struct LatiFlexEvents {
-    let eventType: String
     let date: Date = Date()
-    let name: String?
-    let parameters: [String: String]
-    
+
+    let eventType: String
+    let eventResult: LatiFlexEventResult
+
     init(
         eventType: String,
-        name: String? = nil,
-        parameters: [String : String]
+        eventResult: LatiFlexEventResult
     ) {
         self.eventType = eventType
-        self.name = name
-        self.parameters = parameters
+        self.eventResult = eventResult
     }
 }
 
@@ -34,7 +46,7 @@ public struct LatiFlexNetworkingModel {
     var endTime: Date?
     // Time passes between start and end
     var timeInterval: Float?
-    
+
     mutating func update(with response: URLResponse, finishedDate: Date = Date()) {
         self.response = response
         endTime = finishedDate
@@ -47,7 +59,7 @@ public struct LatiFlexNetworkingModel {
 protocol LatiFlexPresenterInterface {
     var itemCount: Int { get }
     var items: [LatiFlexItemInterface] { get set }
-    
+
     func itemAt(index: Int) -> LatiFlexItemInterface?
     func didSelectItemAt(index: Int, deeplinks: LatiFlexDeeplinksResponse?)
 }
@@ -60,11 +72,11 @@ extension LatiFlexPresenter: LatiFlexPresenterInterface {
     var itemCount: Int {
         items.count - 1
     }
-    
+
     func itemAt(index: Int) -> LatiFlexItemInterface? {
         items[index]
     }
-    
+
     func didSelectItemAt(index: Int, deeplinks: LatiFlexDeeplinksResponse?) {
         if items[index] is LatiFlexDeeplinkItem, let deeplinks = deeplinks {
             items[index].didSelectItem(deeplinks: deeplinks)
