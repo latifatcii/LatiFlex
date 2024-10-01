@@ -23,9 +23,9 @@ private extension LatiFlexEventsViewController {
 }
 
 final class LatiFlexEventsViewController: UIViewController {
-    
+
     var presenter: LatiFlexEventsPresenterInterface!
-    
+
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = Constant.minimumLineSpacing
@@ -35,14 +35,14 @@ final class LatiFlexEventsViewController: UIViewController {
         collectionView.backgroundColor = .white
         return collectionView
     }()
-    
+
     private let searchBar = UISearchBar()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
-    
+
     @objc private func segmentedControlValueChanged(_ segmentedControl: UISegmentedControl) {
         presenter.selectedSegmentChanged(index: segmentedControl.selectedSegmentIndex)
     }
@@ -50,7 +50,7 @@ final class LatiFlexEventsViewController: UIViewController {
 
 extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
     var associatedNavigationItem: UINavigationItem { navigationItem }
-    
+
     func prepareUI() {
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -59,11 +59,11 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
         searchBar.delegate = self
         collectionView.keyboardDismissMode = .onDrag
     }
-    
+
     func reloadData() {
         collectionView.reloadData()
     }
-    
+
     func prepareSegmentedControl(items: [String]) {
         let segmentedControl = UISegmentedControl(items: items)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
@@ -90,12 +90,14 @@ extension LatiFlexEventsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         presenter.numberOfItems
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexCell", for: indexPath) as? LatiFlexCell else { return UICollectionViewCell() }
+        let item = presenter.item(at: indexPath.item)
         let cellPresenter = LatiFlexCellPresenter(view: cell,
-                                                  title: presenter.itemAt(index: indexPath.item)?.eventType,
-                                                  detail: presenter.eventNameAt(index: indexPath.item))
+                                                  title: item?.eventType,
+                                                  detail: presenter.detail(for: indexPath.item),
+                                                  isSuccess: item?.eventResult.isSuccess ?? false)
         cell.presenter = cellPresenter
         return cell
     }
@@ -103,9 +105,9 @@ extension LatiFlexEventsViewController: UICollectionViewDataSource {
 
 extension LatiFlexEventsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectItemAt(index: indexPath.item)
+        presenter.didSelectItem(at: indexPath.item)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         .init(width: view.frame.width, height: Constant.cellHeight)
     }

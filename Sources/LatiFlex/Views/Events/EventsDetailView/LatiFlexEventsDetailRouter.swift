@@ -14,19 +14,20 @@ protocol LatiFlexEventsDetailRouterInterface: RouterInterface {
 
 final class LatiFlexEventsDetailRouter {
     weak var navigationController: UINavigationController?
-    
+
     init(with navigationController: UINavigationController?) {
         self.navigationController = navigationController
     }
 
-    static func createModule(using navigationController: UINavigationController? = nil, eventParameters: [String: Any]?) -> UIViewController {
+    static func createModule(using navigationController: UINavigationController? = nil, eventParameters: [String: Any]?, eventError: Error?) -> UIViewController {
         let detailVC = LatiFlexEventsDetailViewController()
         let router = LatiFlexEventsDetailRouter(with: navigationController)
         let detailPresenter = LatiFlexEventsDetailPresenter(view: detailVC,
                                                             router: router,
-                                                            eventParameters: eventParameters)
+                                                            eventParameters: eventParameters,
+                                                            eventError: eventError)
         detailVC.presenter = detailPresenter
-        
+
         return detailVC
     }
 }

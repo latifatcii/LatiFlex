@@ -12,8 +12,8 @@ protocol LatiFlexEventsDetailViewInterface: AnyObject {
     var boldAttr: [NSAttributedString.Key : Any] { get }
 
     func prepareUI()
-    func setEventParametersLabel(text: String?)
-    func setEventParametersLabel(attributedText: NSAttributedString?)
+    func setResponseViewText(text: String?)
+    func setResponseViewText(attributedText: NSAttributedString?)
 }
 
 private extension LatiFlexEventsDetailViewController {
@@ -24,15 +24,15 @@ private extension LatiFlexEventsDetailViewController {
 }
 
 final class LatiFlexEventsDetailViewController: UIViewController {
-    
+
     var presenter: LatiFlexEventsDetailPresenterInterface!
-    
+
     private let responseView: UITextView = {
         let responseView = UITextView()
         responseView.font = .systemFont(ofSize: Constant.responseViewFontSize)
         return responseView
     }()
-    
+
     private let searchBar = UISearchBar()
 
     override func viewDidLoad() {
@@ -45,21 +45,21 @@ extension LatiFlexEventsDetailViewController: LatiFlexEventsDetailViewInterface 
     var boldAttr: [NSAttributedString.Key : Any] {
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: Constant.boldAttrFontSize, weight: .bold), .foregroundColor: UIColor.orange]
     }
-    
+
     func prepareUI() {
         view.backgroundColor = .white
-        
+
         responseView.embedEdgeToEdge(in: view, shouldEmbedSafeArea: true)
         responseView.isEditable = false
         navigationItem.titleView = searchBar
         searchBar.delegate = self
     }
-    
-    func setEventParametersLabel(text: String?) {
+
+    func setResponseViewText(text: String?) {
         responseView.text = text
     }
-    
-    func setEventParametersLabel(attributedText: NSAttributedString?) {
+
+    func setResponseViewText(attributedText: NSAttributedString?) {
         responseView.attributedText = attributedText
     }
 }
