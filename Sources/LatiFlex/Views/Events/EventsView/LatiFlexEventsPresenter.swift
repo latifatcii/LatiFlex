@@ -34,6 +34,7 @@ private extension LatiFlexEventPresenter {
         case Demeter
         case Firebase
         case NewRelic
+        case CleverTap
     }
 }
 
@@ -109,7 +110,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
             case Events.Firebase.rawValue:
                 guard let eventName = parameters[Constant.firebaseCategoryParameterName] as? String else { return nil }
                 return eventName
-            case Events.Demeter.rawValue:
+            case Events.Demeter.rawValue, Events.CleverTap.rawValue:
                 return name
             default:
                 guard let eventName = parameters[Constant.eventParameterName] as? String else { return nil }
