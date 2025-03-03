@@ -10,29 +10,37 @@ protocol LatiFlexCellPresenterInterface {
     func load()
 }
 
+extension LatiFlexCellPresenter {
+    struct Arguments {
+        let title: String?
+        let detail: String?
+        let isSuccess: Bool
+
+        init(title: String? = nil, detail: String? = nil, isSuccess: Bool = false) {
+            self.title = title
+            self.detail = detail
+            self.isSuccess = isSuccess
+        }
+    }
+}
+
 final class LatiFlexCellPresenter {
     private weak var view: LatiFlexCellInterface?
-    private let title: String?
-    private let detail: String?
-    private let isSuccess: Bool
+    private let arguments: Arguments
 
     init(view: LatiFlexCellInterface?,
-         title: String?,
-         detail: String?,
-         isSuccess: Bool = false) {
+         arguments: Arguments) {
         self.view = view
-        self.title = title
-        self.detail = detail
-        self.isSuccess = isSuccess
+        self.arguments = arguments
     }
 }
 
 extension LatiFlexCellPresenter: LatiFlexCellPresenterInterface {
     func load() {
         view?.prepareUI()
-        view?.setTitleLabel(text: title)
-        view?.setDetailLabel(text: detail)
-        view?.setDetailLabelTextColor(isSuccess ? .black : .red)
-        view?.setDetailLabelVisibility(isHidden: detail?.isEmpty ?? true)
+        view?.setTitleLabel(text: arguments.title)
+        view?.setDetailLabel(text: arguments.detail)
+        view?.setDetailLabelTextColor(arguments.isSuccess ? .black : .red)
+        view?.setDetailLabelVisibility(isHidden: arguments.detail?.isEmpty ?? true)
     }
 }

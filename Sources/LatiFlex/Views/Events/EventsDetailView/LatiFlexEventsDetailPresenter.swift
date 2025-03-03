@@ -13,6 +13,13 @@ protocol LatiFlexEventsDetailPresenterInterface {
     func viewDidLoad()
 }
 
+private extension LatiFlexEventsDetailPresenter {
+    enum Constant {
+        static let customBarButtonFontSize: Double = 14
+        static let customBarButtonTitle: String = "Copy"
+    }
+}
+
 final class LatiFlexEventsDetailPresenter {
     private weak var view: LatiFlexEventsDetailViewInterface?
     private let router: LatiFlexEventsDetailRouterInterface
@@ -28,6 +35,13 @@ final class LatiFlexEventsDetailPresenter {
         self.eventParameters = eventParameters
         self.eventError = eventError
     }
+
+    @objc
+    private func copyButtonTapped() {
+        let prettyPrintedEvent = eventParameters?.prettyPrintedString
+        let responseText = prettyPrintedEvent ?? String(describing: eventError)
+        view?.setPasteBoard(text: responseText)
+    }
 }
 
 extension LatiFlexEventsDetailPresenter: LatiFlexEventsDetailPresenterInterface {
@@ -38,6 +52,12 @@ extension LatiFlexEventsDetailPresenter: LatiFlexEventsDetailPresenterInterface 
         } else if let eventError {
             view?.setResponseViewText(text: String(describing: eventError))
         }
+        view?.setCustomBarButton(style: .textWithUIColor(color: .blue,
+                                                         font: .systemFont(ofSize: Constant.customBarButtonFontSize),
+                                                         title: Constant.customBarButtonTitle),
+                                 position: .right,
+                                 target: self,
+                                 selector: #selector(copyButtonTapped))
     }
 
     func textDidChange(searchtext: String) {

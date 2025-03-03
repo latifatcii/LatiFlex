@@ -13,9 +13,8 @@ protocol LatiFlexEventsPresenterInterface {
 
     func viewDidLoad()
     func didSelectItem(at index: Int)
-    func item(at index: Int) -> LatiFlexEvents?
-    func detail(for index: Int) -> String?
     func selectedSegmentChanged(index: Int)
+    func arguments(at index: Int) -> LatiFlexCellPresenter.Arguments
     func textDidChange(searchtext: String)
 }
 
@@ -23,8 +22,6 @@ private extension LatiFlexEventPresenter {
     enum Constant {
         static let closeButtonImage: String = "DebuggerKitCloseButtonIcon"
         static let deleteIconImage: String = "DebuggerKitDeleteButtonIcon"
-        static let eventParameterName: String = "event"
-        static let firebaseCategoryParameterName: String = "eventCategory"
         static let failedEventText = "Failed Event"
     }
 
@@ -35,6 +32,27 @@ private extension LatiFlexEventPresenter {
         case Firebase
         case NewRelic
         case CleverTap
+
+        var shouldUseNameAsTitle: Bool { self == .Demeter }
+        var eventKey: String {
+            switch self {
+            case .Firebase:
+                return "eventCategory"
+            default:
+                return "event"
+            }
+        }
+
+        var groupKey: String? {
+            switch self {
+            case .Delphoi:
+                return "tv003"
+            case .Demeter:
+                return "event_group"
+            default:
+                return nil
+            }
+        }
     }
 }
 
@@ -43,6 +61,8 @@ final class LatiFlexEventPresenter {
     private let router: LatiFlexEventsRouterInterface
     private var latiFlexEvents: () -> [LatiFlexEvents]
     private var filteredLatiFlexEvents: [LatiFlexEvents] = []
+    private var searchedLatiFlexEvents: [LatiFlexEvents]?
+    private var currentEventList: [LatiFlexEvents] { searchedLatiFlexEvents ?? filteredLatiFlexEvents }
     private var removeLatiFlexEvents: ([LatiFlexEvents]) -> ()
     private var selectedIndex: Int = .zero
 
@@ -65,10 +85,49 @@ final class LatiFlexEventPresenter {
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[selectedIndex] }
         view?.reloadData()
     }
+
+    private func checkEventContains(event: LatiFlexEventResult, keyword: String) -> Bool {
+        let lowercasedKeyword = keyword.lowercased()
+        switch event {
+        case .success(let name, let parameters):
+            let isNameContainsKeyword = compare(string: name)
+            let isParametersContainsKeyword = parameters.contains(where: { compare(string: "\($0.key)\($0.value)") })
+            return isNameContainsKeyword || isParametersContainsKeyword
+        case .failure(let error):
+            return compare(string: error.localizedDescription)
+        }
+        func compare(string: String?) -> Bool { string?.lowercased().contains(lowercasedKeyword) ?? false }
+    }
+
+    private func title(event : LatiFlexEvents) -> String? {
+        guard let eventType = Events(rawValue: event.eventType) else { return nil }
+        let eventTypeValue = eventType.rawValue
+
+        switch event.eventResult {
+        case let .success(name, parameters):
+            guard !eventType.shouldUseNameAsTitle else { return name }
+            let title = parameters[eventType.eventKey] as? String
+            return title ?? eventTypeValue
+        case .failure:
+            return eventTypeValue
+        }
+    }
+
+    private func detail(event : LatiFlexEvents) -> String? {
+        guard let eventType = Events(rawValue: event.eventType) else { return nil }
+
+        switch event.eventResult {
+        case let .success(_, parameters):
+            guard let groupKey = eventType.groupKey else { return nil }
+            return parameters[groupKey] as? String
+        case .failure:
+            return Constant.failedEventText
+        }
+    }
 }
 
 extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
-    var numberOfItems: Int { filteredLatiFlexEvents.count }
+    var numberOfItems: Int { currentEventList.count }
 
     func viewDidLoad() {
         view?.prepareUI()
@@ -98,32 +157,21 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     }
 
     func item(at index: Int) -> LatiFlexEvents? {
-        filteredLatiFlexEvents[index]
+        currentEventList[index]
     }
 
-    func detail(for index: Int) -> String? {
-        let event = filteredLatiFlexEvents[index]
-
-        switch event.eventResult {
-        case let .success(name, parameters):
-            switch event.eventType {
-            case Events.Firebase.rawValue:
-                guard let eventName = parameters[Constant.firebaseCategoryParameterName] as? String else { return nil }
-                return eventName
-            case Events.Demeter.rawValue, Events.CleverTap.rawValue:
-                return name
-            default:
-                guard let eventName = parameters[Constant.eventParameterName] as? String else { return nil }
-                return eventName
-            }
-        case .failure:
-            return Constant.failedEventText
-        }
+    func arguments(at index: Int) -> LatiFlexCellPresenter.Arguments {
+        guard let event = item(at: index) else { return .init() }
+        let title = title(event: event)
+        let detail = detail(event: event)
+        return .init(title: title, detail: detail, isSuccess: event.eventResult.isSuccess)
     }
 
     func selectedSegmentChanged(index: Int) {
         selectedIndex = index
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[index] }
+        searchedLatiFlexEvents = nil
+        view?.setSearchBarText(text: "")
         view?.reloadData()
     }
 
@@ -132,11 +180,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
             selectedSegmentChanged(index: selectedIndex)
             return
         }
-        filteredLatiFlexEvents = latiFlexEvents().filter {
-            let eventResult = $0.eventResult
-            guard case let .success(_, parameters) = eventResult else { return false }
-            return parameters.keys.contains(searchtext)
-        }
+        searchedLatiFlexEvents = currentEventList.filter { checkEventContains(event: $0.eventResult, keyword: searchtext) }
         view?.reloadData()
     }
 }

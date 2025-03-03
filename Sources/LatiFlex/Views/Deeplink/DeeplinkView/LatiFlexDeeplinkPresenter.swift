@@ -13,7 +13,7 @@ protocol LatiFlexDeeplinkPresenterInterface {
     
     func viewDidLoad()
     func didSelectItemAt(index: Int)
-    func titleAt(index: Int) -> String
+    func arguments(for index: Int) -> LatiFlexCellPresenter.Arguments
 }
 
 extension LatiFlexDeeplinkPresenter {
@@ -50,10 +50,11 @@ extension LatiFlexDeeplinkPresenter: LatiFlexDeeplinkPresenterInterface {
         deeplinks.deeplinkList.count
     }
     
-    func titleAt(index: Int) -> String {
-        deeplinks.deeplinkList[index].domainName
+    func arguments(for index: Int) -> LatiFlexCellPresenter.Arguments {
+        let title = deeplinks.deeplinkList[index].domainName
+        return .init(title: title)
     }
-    
+
     func didSelectItemAt(index: Int) {
         let deeplinkList = (index == (deeplinks.deeplinkList.count - 1) ? deeplinkList() : deeplinks.deeplinkList[index].deeplinks)
         router.presentDeeplinkDetail(deeplinkList: deeplinkList)
