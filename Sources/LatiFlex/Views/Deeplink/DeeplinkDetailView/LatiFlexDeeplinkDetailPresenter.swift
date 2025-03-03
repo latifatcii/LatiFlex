@@ -12,7 +12,7 @@ protocol LatiFlexDeeplinkDetailPresenterInterface {
     var numberOfItems: Int { get }
     
     func viewDidLoad()
-    func itemAt(index: Int) -> DeeplinkList?
+    func arguments(index: Int) -> LatiFlexCellPresenter.Arguments
     func didSelectItemAt(index: Int)
     func routeButtonTapped()
     func scrollViewDidScroll()
@@ -55,10 +55,11 @@ extension LatiFlexDeeplinkDetailPresenter: LatiFlexDeeplinkDetailPresenterInterf
         appendableDeeplinkList = recentDeeplinkList()
     }
     
-    func itemAt(index: Int) -> DeeplinkList? {
-        deeplinkList?[index]
+    func arguments(index: Int) -> LatiFlexCellPresenter.Arguments {
+        let item = deeplinkList?[index]
+        return .init(title: item?.name, detail: item?.deeplink)
     }
-    
+
     func didSelectItemAt(index: Int) {
         view?.setTextField(text: deeplinkList?[index].deeplink)
         view?.endEditing()

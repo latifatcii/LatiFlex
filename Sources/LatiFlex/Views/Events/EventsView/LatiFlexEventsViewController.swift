@@ -12,6 +12,7 @@ protocol LatiFlexEventsViewInterface: AnyObject, NavigationBarCustomButtonConfig
     func prepareUI()
     func reloadData()
     func prepareSegmentedControl(items: [String])
+    func setSearchBarText(text: String)
 }
 
 private extension LatiFlexEventsViewController {
@@ -64,6 +65,10 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
         collectionView.reloadData()
     }
 
+    func setSearchBarText(text: String) {
+        searchBar.text = text
+    }
+
     func prepareSegmentedControl(items: [String]) {
         let segmentedControl = UISegmentedControl(items: items)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
@@ -93,11 +98,8 @@ extension LatiFlexEventsViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexCell", for: indexPath) as? LatiFlexCell else { return UICollectionViewCell() }
-        let item = presenter.item(at: indexPath.item)
         let cellPresenter = LatiFlexCellPresenter(view: cell,
-                                                  title: item?.eventType,
-                                                  detail: presenter.detail(for: indexPath.item),
-                                                  isSuccess: item?.eventResult.isSuccess ?? false)
+                                                  arguments: presenter.arguments(at: indexPath.item))
         cell.presenter = cellPresenter
         return cell
     }

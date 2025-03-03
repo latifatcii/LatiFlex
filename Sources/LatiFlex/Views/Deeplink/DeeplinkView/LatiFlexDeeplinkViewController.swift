@@ -58,8 +58,7 @@ extension LatiFlexDeeplinkViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexCell", for: indexPath) as? LatiFlexCell else { return UICollectionViewCell() }
         let cellPresenter = LatiFlexCellPresenter(view: cell,
-                                                  title: presenter.titleAt(index: indexPath.row),
-                                                  detail: "")
+                                                  arguments: presenter.arguments(for: indexPath.row))
         cell.presenter = cellPresenter
         return cell
     }

@@ -8,12 +8,13 @@
 
 import UIKit
 
-protocol LatiFlexEventsDetailViewInterface: AnyObject {
+protocol LatiFlexEventsDetailViewInterface: AnyObject, NavigationBarCustomButtonConfigurable {
     var boldAttr: [NSAttributedString.Key : Any] { get }
 
     func prepareUI()
     func setResponseViewText(text: String?)
     func setResponseViewText(attributedText: NSAttributedString?)
+    func setPasteBoard(text: String?)
 }
 
 private extension LatiFlexEventsDetailViewController {
@@ -62,6 +63,15 @@ extension LatiFlexEventsDetailViewController: LatiFlexEventsDetailViewInterface 
     func setResponseViewText(attributedText: NSAttributedString?) {
         responseView.attributedText = attributedText
     }
+
+    func setPasteBoard(text: String?) {
+        UIPasteboard.general.string = text
+    }
+}
+
+// MARK: - NavigationBarCustomButtonConfigurable
+extension LatiFlexEventsDetailViewController {
+    var associatedNavigationItem: UINavigationItem { navigationItem }
 }
 
 extension LatiFlexEventsDetailViewController: UISearchBarDelegate {
