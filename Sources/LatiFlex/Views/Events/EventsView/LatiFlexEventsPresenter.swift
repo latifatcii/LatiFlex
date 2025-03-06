@@ -10,12 +10,14 @@ import Foundation
 
 protocol LatiFlexEventsPresenterInterface {
     var numberOfItems: Int { get }
+    var isSummarizeSwitchEnabled: Bool { get }
 
     func viewDidLoad()
     func didSelectItem(at index: Int)
     func selectedSegmentChanged(index: Int)
     func arguments(at index: Int) -> LatiFlexCellPresenter.Arguments
     func textDidChange(searchtext: String)
+    func summarizeSwitchChanged(isOn: Bool)
 }
 
 private extension LatiFlexEventPresenter {
@@ -23,6 +25,7 @@ private extension LatiFlexEventPresenter {
         static let closeButtonImage: String = "DebuggerKitCloseButtonIcon"
         static let deleteIconImage: String = "DebuggerKitDeleteButtonIcon"
         static let failedEventText = "Failed Event"
+        static let summarizeSwitchUserDefaultKey = "summarizeSwitchIsOn"
     }
 
     enum Events: String, CaseIterable {
@@ -128,6 +131,10 @@ final class LatiFlexEventPresenter {
 
 extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     var numberOfItems: Int { currentEventList.count }
+    
+    var isSummarizeSwitchEnabled: Bool {
+        UserDefaults.standard.bool(forKey: Constant.summarizeSwitchUserDefaultKey) ?? false
+    }
 
     func viewDidLoad() {
         view?.prepareUI()
@@ -144,13 +151,15 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
                                  selector: #selector(deleteButtonTapped))
         let items = LatiFlex.shared.eventTypes.map { $0 }
         view?.prepareSegmentedControl(items: items)
+        view?.prepareEventListView()
+        prepareSummarizeView()
     }
 
     func didSelectItem(at index: Int) {
         guard let eventResult = item(at: index)?.eventResult else { return }
         switch eventResult {
         case let .success(_, parameters):
-            router.presentEventDetail(eventParameters: parameters, eventError: nil)
+            router.presentEventDetail(eventParameters: summarizeEventIfNeeded(parameters: parameters), eventError: nil)
         case let .failure(error):
             router.presentEventDetail(eventParameters: nil, eventError: error)
         }
@@ -171,6 +180,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
         selectedIndex = index
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[index] }
         searchedLatiFlexEvents = nil
+        prepareSummarizeView()
         view?.setSearchBarText(text: "")
         view?.reloadData()
     }
@@ -182,5 +192,34 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
         }
         searchedLatiFlexEvents = currentEventList.filter { checkEventContains(event: $0.eventResult, keyword: searchtext) }
         view?.reloadData()
+    }
+    
+    func summarizeSwitchChanged(isOn: Bool) {
+        UserDefaults.standard.setValue(isOn, forKey: Constant.summarizeSwitchUserDefaultKey)
+    }
+}
+
+
+private extension LatiFlexEventPresenter {
+    func prepareSummarizeView() {
+        let isSummarizeVisible = LatiFlex.shared.eventTypes[selectedIndex] == "Demeter"
+        view?.setSummarizeStackViewVisibility(isHidden: !isSummarizeVisible)
+    }
+    
+    func summarizeEventIfNeeded(parameters: [String: Any]) -> [String: Any] {
+        guard 
+            LatiFlex.shared.eventTypes[selectedIndex] == "Demeter",
+            isSummarizeSwitchEnabled
+        else {
+            return parameters
+        }
+        
+        return [
+            "event": parameters["event"],
+            "event_group": parameters["event_group"],
+            "screen": parameters["screen"],
+            "culture": parameters["culture"],
+            "parameters": parameters["parameters"]
+        ]
     }
 }
