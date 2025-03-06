@@ -46,10 +46,10 @@ final class LatiFlexEventsViewController: UIViewController {
     }()
     
     private let summarizeLabel: UILabel = {
-        let summarize = UILabel()
-        summarize.text = "Summarize Events"
-        summarize.baselineAdjustment = .alignCenters
-        return summarize
+        let summarizeLabel = UILabel()
+        summarizeLabel.text = "Summarize Events"
+        summarizeLabel.baselineAdjustment = .alignCenters
+        return summarizeLabel
     }()
     
     private var stackView: UIStackView?
