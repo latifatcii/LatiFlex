@@ -12,7 +12,9 @@ protocol LatiFlexEventsViewInterface: AnyObject, NavigationBarCustomButtonConfig
     func prepareUI()
     func reloadData()
     func prepareSegmentedControl(items: [String])
+    func prepareEventListView()
     func setSearchBarText(text: String)
+    func setSummarizeStackViewVisibility(isHidden: Bool)
 }
 
 private extension LatiFlexEventsViewController {
@@ -36,6 +38,22 @@ final class LatiFlexEventsViewController: UIViewController {
         collectionView.backgroundColor = .white
         return collectionView
     }()
+    
+    private let summarizeSwitch: UISwitch = {
+        let switchView = UISwitch()
+        switchView.addTarget(self, action: #selector(switchClicked), for: .touchUpInside)
+        return switchView
+    }()
+    
+    private let summarizeLabel: UILabel = {
+        let summarizeLabel = UILabel()
+        summarizeLabel.text = "Summarize Events"
+        summarizeLabel.baselineAdjustment = .alignCenters
+        return summarizeLabel
+    }()
+    
+    private var stackView: UIStackView?
+    private var segmentedControl: UISegmentedControl?
 
     private let searchBar = UISearchBar()
 
@@ -46,6 +64,10 @@ final class LatiFlexEventsViewController: UIViewController {
 
     @objc private func segmentedControlValueChanged(_ segmentedControl: UISegmentedControl) {
         presenter.selectedSegmentChanged(index: segmentedControl.selectedSegmentIndex)
+    }
+    
+    @objc private func switchClicked() {
+        presenter.summarizeSwitchChanged(isOn: summarizeSwitch.isOn)
     }
 }
 
@@ -68,6 +90,10 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
     func setSearchBarText(text: String) {
         searchBar.text = text
     }
+    
+    func setSummarizeStackViewVisibility(isHidden: Bool) {
+        stackView?.isHidden = isHidden
+    }
 
     func prepareSegmentedControl(items: [String]) {
         let segmentedControl = UISegmentedControl(items: items)
@@ -80,14 +106,29 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
                                                   shouldEmbedSafeArea: true),
                                          .trailing(.zero,
                                                    shouldEmbedSafeArea: true)])
-        collectionView.embed(in: view,
-                             anchors: [.top(Constant.collectionViewTopConstraint,
-                                            toView: segmentedControl),
-                                       .leading(.zero,
-                                                shouldEmbedSafeArea: true),
-                                       .trailing(.zero,
-                                                 shouldEmbedSafeArea: true),
-                                       .bottom(.zero, shouldEmbedSafeArea: true)])
+        self.segmentedControl = segmentedControl
+    }
+    
+    func prepareEventListView() {
+        summarizeSwitch.isOn = presenter.isSummarizeSwitchEnabled
+        
+        let stackView = UIStackView(arrangedSubviews: [UIView(),summarizeLabel, summarizeSwitch, UIView()])
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        self.stackView = stackView
+        
+        let verticalStackView = UIStackView(arrangedSubviews: [stackView, collectionView])
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 10
+        verticalStackView.embed(in: view,
+                                anchors: [.top(Constant.collectionViewTopConstraint,
+                                               toView: segmentedControl),
+                                          .leading(.zero,
+                                                   shouldEmbedSafeArea: true),
+                                          .trailing(.zero,
+                                                    shouldEmbedSafeArea: true),
+                                          .bottom(.zero, shouldEmbedSafeArea: true)])
     }
 }
 
