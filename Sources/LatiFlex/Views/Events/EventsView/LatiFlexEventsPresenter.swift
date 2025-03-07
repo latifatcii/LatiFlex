@@ -202,18 +202,26 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
 
 private extension LatiFlexEventPresenter {
     func prepareSummarizeView() {
-        let isSummarizeVisible = LatiFlex.shared.eventTypes[selectedIndex] == "Demeter"
+        let eventType = LatiFlex.shared.eventTypes[selectedIndex]
+        let isSummarizeVisible =  eventType == "Demeter" || eventType == "Delphoi"
         view?.setSummarizeStackViewVisibility(isHidden: !isSummarizeVisible)
     }
     
     func summarizeEventIfNeeded(parameters: [String: Any]) -> [String: Any] {
-        guard 
-            LatiFlex.shared.eventTypes[selectedIndex] == "Demeter",
-            isSummarizeSwitchEnabled
-        else {
+        guard isSummarizeSwitchEnabled else { return parameters }
+        
+        switch LatiFlex.shared.eventTypes[selectedIndex] {
+        case "Demeter":
+            return summarizeDemeterEvent(parameters: parameters)
+        case "Delphoi":
+            return summarizeDelphoiEvent(parameters: parameters)
+        default:
             return parameters
         }
         
+    }
+    
+    func summarizeDemeterEvent(parameters: [String: Any]) -> [String: Any] {
         return [
             "event": parameters["event"],
             "event_group": parameters["event_group"],
@@ -221,5 +229,12 @@ private extension LatiFlexEventPresenter {
             "culture": parameters["culture"],
             "parameters": parameters["parameters"]
         ]
+    }
+    
+    func summarizeDelphoiEvent(parameters: [String: Any]) -> [String: Any] {
+        let removeableParameterKeys =  ["segment", "tv006", "tv123", "idfa", "device", "tv016", "appVersion", "tv015", "pid", "sid", "tv277", "channel", "screenSize", "tv037", "tv017", "tv008", "osVersion", "tv070", "tv245", "tv018", "tv278", "tv010"]
+        var tempParameters = parameters
+        removeableParameterKeys.forEach({ tempParameters.removeValue(forKey: $0)})
+        return tempParameters
     }
 }
