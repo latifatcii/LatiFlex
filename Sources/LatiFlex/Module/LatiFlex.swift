@@ -27,24 +27,38 @@ public final class LatiFlex: LatiFlexInterface {
         setConfigCompletion?(key, value)
     }
     
-    private let firstWindow = UIApplication.shared.windows.first
-    
+    private var activeWindow: UIWindow? {
+        // First try the key window via modern scene-based API (iOS 13+)
+        if let keyWindow = UIApplication.shared
+            .connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow }) {
+            return keyWindow
+        }
+
+        // Fallback: Use deprecated API (for older apps or simple previews)
+        return UIApplication.shared.windows.first
+    }
+
     public func show(items: [LatiFlexItemInterface] = []) {
         presenter.items = [LatiFlexEmptyItem()] + items + [LatiFlexDeeplinkItem(), LatiFlexEventsItem(), LatiFlexNetworkItem()]
-        let floatyView = LAFloaty(frame: .init(x: .zero, y: .zero, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         
-        var rootHasFloatyView: Bool = false
-        firstWindow?.subviews.forEach {
-            if $0 is LAFloaty {
-                rootHasFloatyView = true
-                $0.removeFromSuperview()
-                return
-            }
+        guard let window = activeWindow else {
+            print("⚠️ LatiFlexWrapper: No window found to attach floaty view.")
+            return
         }
-        if !rootHasFloatyView {
-            firstWindow?.addSubview(floatyView)
-            floatyView.datasource = self
+
+        // Avoid duplicates
+        for subview in window.subviews where subview is LAFloaty {
+            subview.removeFromSuperview()
+            return
         }
+
+        let floatyView = LAFloaty(frame: window.bounds)
+        window.addSubview(floatyView)
+        window.bringSubviewToFront(floatyView)
+        floatyView.datasource = self
     }
     
     public func appendEvents(type: String, eventResult: LatiFlexEventResult) {
