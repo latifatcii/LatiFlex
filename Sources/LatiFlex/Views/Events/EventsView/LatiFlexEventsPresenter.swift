@@ -68,6 +68,7 @@ final class LatiFlexEventPresenter {
     private var currentEventList: [LatiFlexEvents] { searchedLatiFlexEvents ?? filteredLatiFlexEvents }
     private var removeLatiFlexEvents: ([LatiFlexEvents]) -> ()
     private var selectedIndex: Int = .zero
+    private var isSummarizeEnabled: Bool = false
 
     init(view: LatiFlexEventsViewInterface?,
          router: LatiFlexEventsRouterInterface,
@@ -77,6 +78,7 @@ final class LatiFlexEventPresenter {
         self.router = router
         self.latiFlexEvents = latiFlexEvents
         self.removeLatiFlexEvents = removeLatiFlexEvents
+        self.isSummarizeEnabled = UserDefaults.standard.bool(forKey: Constant.summarizeSwitchUserDefaultKey)
     }
 
     @objc private func closeButtonTapped() {
@@ -133,7 +135,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     var numberOfItems: Int { currentEventList.count }
     
     var isSummarizeSwitchEnabled: Bool {
-        UserDefaults.standard.bool(forKey: Constant.summarizeSwitchUserDefaultKey) ?? false
+        return isSummarizeEnabled
     }
 
     func viewDidLoad() {
@@ -195,7 +197,9 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     }
     
     func summarizeSwitchChanged(isOn: Bool) {
-        UserDefaults.standard.setValue(isOn, forKey: Constant.summarizeSwitchUserDefaultKey)
+        isSummarizeEnabled = isOn
+        UserDefaults.standard.set(isOn, forKey: Constant.summarizeSwitchUserDefaultKey)
+        UserDefaults.standard.synchronize()
     }
 }
 

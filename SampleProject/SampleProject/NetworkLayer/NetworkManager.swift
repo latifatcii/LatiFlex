@@ -6,17 +6,25 @@
 //
 
 import Foundation
+import LatiFlex
 
 class NetworkManager {
     static let shared = NetworkManager()
     
-    private init() {}
+    private let session: URLSession
+    
+    private init() {
+        let configuration = URLSessionConfiguration.default
+        LatiFlex.shared.inject(configuration: configuration)
+        session = URLSession(configuration: configuration)
+    }
     
     func request<T:Decodable> (_ endpoint : Endpoint, completion : @escaping (Swift.Result  <T, Error>) ->Void) ->Void {
-        
-        let urlSessionTask = URLSession.shared.dataTask(with: endpoint.request()) {(data ,response , error) in
+        let urlSessionTask = session.dataTask(with: endpoint.request()) {(data ,response , error) in
             if let error = error {
                 print(error)
+                completion(.failure(error))
+                return
             }
             
             if let data = data {
@@ -28,7 +36,6 @@ class NetworkManager {
                     completion(.failure(error))
                 }
             }
-            
         }
         urlSessionTask.resume()
     }
@@ -47,5 +54,4 @@ class NetworkManager {
         let endpoint = Endpoint.postArticle(data: data)
         request(endpoint, completion: completion)
     }
-
 }

@@ -14,17 +14,19 @@ protocol LatiFlexNetworkDetailRouterInterface: RouterInterface {
 
 final class LatiFlexNetworkDetailRouter {
     weak var navigationController: UINavigationController?
+    private let networkModel: LatiFlexNetworkingModel?
     
-    init(with navigationController: UINavigationController?) {
+    init(with navigationController: UINavigationController?, networkModel: LatiFlexNetworkingModel?) {
         self.navigationController = navigationController
+        self.networkModel = networkModel
     }
 
     static func createModule(using navigationController: UINavigationController? = nil, networkModel: LatiFlexNetworkingModel?) -> UIViewController {
         let networkVC = LatiFlexNetworkDetailViewController()
-        let router = LatiFlexNetworkDetailRouter(with: navigationController)
+        let router = LatiFlexNetworkDetailRouter(with: navigationController, networkModel: networkModel)
         let eventPresenter = LatiFlexNetworkDetailPresenter(view: networkVC,
-                                                               router: router,
-        networkModel: networkModel)
+                                                          router: router,
+                                                          networkModel: networkModel)
         networkVC.presenter = eventPresenter
         
         return networkVC
@@ -34,8 +36,10 @@ final class LatiFlexNetworkDetailRouter {
 extension LatiFlexNetworkDetailRouter: LatiFlexNetworkDetailRouterInterface {
     func presentNetworkResponse(response: String) {
         let detailVC = LatiFlexNetworkDetailResponseViewController()
+        let url = networkModel?.request?.url?.absoluteString
         let detailPresenter = LatiFlexNetworkDetailResponsePresenter(view: detailVC,
-                                                                response: response)
+                                                                    response: response,
+                                                                    originalUrl: url)
         detailVC.presenter = detailPresenter
         navigationController?.pushViewController(detailVC, animated: true)
     }

@@ -53,6 +53,13 @@ final class LatiFlexNetworkPresenter {
     }
     
     @objc private func deleteButtonTapped() {
+        // Önce mock response'ları temizle
+        for model in filteredNetworkModels {
+            if let url = model.request?.url {
+                LatiFlexNetworkInterceptor.shared.removeMockResponse(for: url)
+            }
+        }
+        // Sonra istekleri temizle
         removeLatiFlexNetworkModels([])
         filteredNetworkModels = latiFlexNetworkModels()
         view?.reloadData()

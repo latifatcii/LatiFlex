@@ -17,6 +17,11 @@ protocol LatiFlexNetworkDetailResponseViewInterface: AnyObject, NavigationBarCus
     func setResponseViewScrollToRange(nsRange: NSRange)
     func setResponseViewScrollToTop()
     func setToPasteboard(_ text: String)
+    func showSuccessAlert(title: String, message: String)
+    func showErrorAlert(title: String, message: String)
+    func setSaveButtonEnabled(_ enabled: Bool)
+    func showInvalidJsonIndicator()
+    func hideInvalidJsonIndicator()
 }
 
 private extension LatiFlexNetworkDetailResponseViewController {
@@ -32,10 +37,28 @@ final class LatiFlexNetworkDetailResponseViewController: UIViewController {
     private let responseView: UITextView = {
         let responseView = UITextView()
         responseView.font = .systemFont(ofSize: Constant.responseViewFontSize)
+        responseView.isEditable = false
         return responseView
     }()
     
     private let searchBar = UISearchBar()
+    private var saveButton: UIBarButtonItem!
+    
+    private let invalidJsonIndicator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemRed.withAlphaComponent(0.1)
+        view.isHidden = true
+        return view
+    }()
+    
+    private let invalidJsonLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Invalid JSON Format"
+        label.textColor = .systemRed
+        label.font = .systemFont(ofSize: 12)
+        label.isHidden = true
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,10 +75,55 @@ extension LatiFlexNetworkDetailResponseViewController: LatiFlexNetworkDetailResp
     
     func prepareUI() {
         view.backgroundColor = .white
-        responseView.embedEdgeToEdge(in: view)
-        responseView.isEditable = false
         navigationItem.titleView = searchBar
         searchBar.delegate = self
+        
+        view.addSubview(responseView)
+        responseView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Mock durumuna göre Save butonu ve JSON validation ekle
+        if LatiFlexNetworkInterceptor.shared.isMockingEnabled() {
+            responseView.isEditable = true
+            
+            let saveBarButton = UIBarButtonItem(title: "Save",
+                                              style: .plain,
+                                              target: self,
+                                              action: #selector(saveButtonTapped))
+            saveBarButton.isEnabled = false
+            saveButton = saveBarButton
+            navigationItem.rightBarButtonItems = [saveBarButton]
+            
+            // Setup invalid JSON indicator
+            view.addSubview(invalidJsonIndicator)
+            invalidJsonIndicator.translatesAutoresizingMaskIntoConstraints = false
+            
+            invalidJsonIndicator.addSubview(invalidJsonLabel)
+            invalidJsonLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                invalidJsonIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                invalidJsonIndicator.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                invalidJsonIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                invalidJsonIndicator.heightAnchor.constraint(equalToConstant: 20),
+                
+                invalidJsonLabel.centerYAnchor.constraint(equalTo: invalidJsonIndicator.centerYAnchor),
+                invalidJsonLabel.leadingAnchor.constraint(equalTo: invalidJsonIndicator.leadingAnchor, constant: 16),
+                
+                responseView.topAnchor.constraint(equalTo: invalidJsonIndicator.bottomAnchor),
+                responseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                responseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                responseView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                responseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                responseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                responseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                responseView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
+        
+        responseView.delegate = self
     }
     
     func setResponseView(text: String?) {
@@ -75,6 +143,40 @@ extension LatiFlexNetworkDetailResponseViewController: LatiFlexNetworkDetailResp
     }
     
     func setToPasteboard(_ text: String) { UIPasteboard.general.string = text }
+    
+    func showSuccessAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, 
+                                    message: message, 
+                                    preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    func showErrorAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, 
+                                    message: message, 
+                                    preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    func setSaveButtonEnabled(_ enabled: Bool) {
+        saveButton?.isEnabled = enabled
+    }
+    
+    func showInvalidJsonIndicator() {
+        invalidJsonIndicator.isHidden = false
+        invalidJsonLabel.isHidden = false
+    }
+    
+    func hideInvalidJsonIndicator() {
+        invalidJsonIndicator.isHidden = true
+        invalidJsonLabel.isHidden = true
+    }
+    
+    @objc private func saveButtonTapped() {
+        presenter.saveButtonTapped(with: responseView.text)
+    }
 }
 
 extension LatiFlexNetworkDetailResponseViewController: UISearchBarDelegate {
@@ -84,6 +186,12 @@ extension LatiFlexNetworkDetailResponseViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         presenter.searchBarSearchButtonClicked()
+    }
+}
+
+extension LatiFlexNetworkDetailResponseViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        presenter.responseTextDidChange(textView.text)
     }
 }
 

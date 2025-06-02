@@ -31,11 +31,32 @@ final class LatiFlexNetworkViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(LatiFlexNetworkCell.self, forCellWithReuseIdentifier: "LatiFlexNetworkCell")
         collectionView.backgroundColor = .white
-        
         return collectionView
     }()
     
     private let searchBar = UISearchBar()
+    
+    private let enableMockSwitch: UISwitch = {
+        let enableSwitch = UISwitch()
+        enableSwitch.isOn = LatiFlexNetworkInterceptor.shared.isMockingEnabled()
+        return enableSwitch
+    }()
+    
+    private let enableMockLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Enable Mock"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.baselineAdjustment = .alignCenters
+        return label
+    }()
+    
+    private lazy var enableMockStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [UIView(), enableMockLabel, enableMockSwitch, UIView()])
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.distribution = .fill
+        return stackView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,13 +68,27 @@ extension LatiFlexNetworkViewController: LatiFlexNetworkViewInterface {
     var associatedNavigationItem: UINavigationItem { navigationItem }
     
     func prepareUI() {
-        collectionView.backgroundColor = .systemGray5
-        collectionView.embedEdgeToEdge(in: view)
+        view.backgroundColor = .white
+        searchBar.delegate = self
         collectionView.delegate = self
         collectionView.dataSource = self
-        navigationItem.titleView = searchBar
-        searchBar.delegate = self
         collectionView.keyboardDismissMode = .onDrag
+
+        navigationItem.titleView = searchBar
+
+        enableMockSwitch.addTarget(self, action: #selector(enableMockSwitchChanged(_:)), for: .valueChanged)
+
+        let verticalStackView = UIStackView(arrangedSubviews: [enableMockStackView, collectionView])
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 10
+        view.addSubview(verticalStackView)
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     func reloadData() {
@@ -97,5 +132,11 @@ extension LatiFlexNetworkViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter.clearbutton(searchText: searchText)
+    }
+}
+
+extension LatiFlexNetworkViewController {
+    @objc private func enableMockSwitchChanged(_ sender: UISwitch) {
+        LatiFlexNetworkInterceptor.shared.setMockEnabled(sender.isOn)
     }
 }
