@@ -69,8 +69,9 @@ final class LatiFlexNetworkDetailResponsePresenter {
     }
 
     @objc private func copyButtonTapped() {
-        guard let response = response else { return }
-        view?.setToPasteboard(response)
+        let currentResponse = getSavedMockResponse() ?? response
+        guard let responseText = currentResponse else { return }
+        view?.setToPasteboard(responseText)
     }
 }
 

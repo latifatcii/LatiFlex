@@ -49,6 +49,9 @@ class LatiFlexNetworkInterceptor {
     func setMockEnabled(_ enabled: Bool) {
         queue.async {
             self.isMockEnabled = enabled
+            if enabled {
+                self.clearMockResponses()
+            }
             UserDefaults.standard.set(enabled, forKey: self.mockEnabledKey)
             UserDefaults.standard.synchronize()
         }
