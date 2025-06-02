@@ -16,11 +16,17 @@ public final class LatiFlex: LatiFlexInterface {
     
     private init() {
         presenter = LatiFlexPresenter()
-        URLProtocol.registerClass(LatiFlexURLProtocolListener.self)
+        setupNetworkMocking()
+    }
+    
+    private func setupNetworkMocking() {
+        URLProtocol.registerClass(LatiFlexURLProtocol.self)
     }
     
     public func inject(configuration: URLSessionConfiguration) {
-        configuration.protocolClasses?.insert(LatiFlexURLProtocolListener.self, at: .zero)
+        var protocolClasses = configuration.protocolClasses ?? []
+        protocolClasses.insert(LatiFlexURLProtocol.self, at: 0)
+        configuration.protocolClasses = protocolClasses
     }
     
     public func setConfig(key: String, value: String) {

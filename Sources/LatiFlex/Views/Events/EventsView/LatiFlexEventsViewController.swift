@@ -41,7 +41,7 @@ final class LatiFlexEventsViewController: UIViewController {
     
     private let summarizeSwitch: UISwitch = {
         let switchView = UISwitch()
-        switchView.addTarget(self, action: #selector(switchClicked), for: .touchUpInside)
+        switchView.addTarget(self, action: #selector(switchClicked), for: .valueChanged)
         return switchView
     }()
     
