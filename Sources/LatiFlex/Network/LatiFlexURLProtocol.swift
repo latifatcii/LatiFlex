@@ -53,6 +53,9 @@ public class LatiFlexURLProtocol: URLProtocol {
                 
                 self.client?.urlProtocolDidFinishLoading(self)
                 LatiFlex.shared.networkingModel.append(self.networkingModel)
+                
+                // Notify external listeners about the network request
+                LatiFlex.shared.notifyNetworkRequest(self.networkingModel)
             }
             
             self.dataTask?.resume()
@@ -91,6 +94,9 @@ public class LatiFlexURLProtocol: URLProtocol {
             self.client?.urlProtocolDidFinishLoading(self)
             
             LatiFlex.shared.networkingModel.append(self.networkingModel)
+            
+            // Notify external listeners about the network request
+            LatiFlex.shared.notifyNetworkRequest(self.networkingModel)
         }
     }
 }
@@ -122,5 +128,8 @@ extension LatiFlexURLProtocol: URLSessionDataDelegate {
         }
         
         LatiFlex.shared.networkingModel.append(networkingModel)
+        
+        // Notify external listeners about the network request
+        LatiFlex.shared.notifyNetworkRequest(networkingModel)
     }
 } 

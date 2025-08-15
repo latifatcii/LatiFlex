@@ -37,23 +37,25 @@ public struct LatiFlexEvents {
 }
 
 public struct LatiFlexNetworkingModel {
-    var request: URLRequest?
-    var data: Data = Data()
-    var response: URLResponse?
+    public var request: URLRequest?
+    public var data: Data = Data()
+    public var response: URLResponse?
     // The date when the request started
-    var startTime: Date?
+    public var startTime: Date?
     // The date when the request ended
-    var endTime: Date?
+    public var endTime: Date?
     // Time passes between start and end
-    var timeInterval: Float?
+    public var timeInterval: Float?
 
-    mutating func update(with response: URLResponse, finishedDate: Date = Date()) {
+    public mutating func update(with response: URLResponse, finishedDate: Date = Date()) {
         self.response = response
         endTime = finishedDate
         if let startTime = startTime {
             timeInterval = Float(finishedDate.timeIntervalSince(startTime))
         }
     }
+    
+    public init() {}
 }
 
 protocol LatiFlexPresenterInterface {

@@ -8,6 +8,7 @@ public final class LatiFlex: LatiFlexInterface {
     public var eventTypes: [String] = []
     public var configurations: [String: String] = [:]
     public var setConfigCompletion: ((String, String) -> ())?
+    public var networkRequestCallback: ((LatiFlexNetworkingModel) -> Void)?
     var networkingModel: [LatiFlexNetworkingModel] = []
     var deeplinkList: [DeeplinkList] = []
     
@@ -77,6 +78,17 @@ public final class LatiFlex: LatiFlexInterface {
     
     public func appendEventTypes(type: String) {
         LatiFlex.shared.eventTypes.append(type)
+    }
+    
+    // MARK: - Network Monitoring
+    
+    public func setNetworkRequestCallback(_ callback: @escaping (LatiFlexNetworkingModel) -> Void) {
+        self.networkRequestCallback = callback
+    }
+    
+    // Internal method to notify about new network requests
+    internal func notifyNetworkRequest(_ model: LatiFlexNetworkingModel) {
+        networkRequestCallback?(model)
     }
 }
 
