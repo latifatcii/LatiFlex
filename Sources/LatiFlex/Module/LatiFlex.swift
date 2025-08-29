@@ -20,11 +20,11 @@ public final class LatiFlex: LatiFlexInterface {
         setupNetworkMocking()
     }
     
-    private func setupNetworkMocking() {
-        URLProtocol.registerClass(LatiFlexURLProtocol.self)
-    }
-    
     public func inject(configuration: URLSessionConfiguration) {
+        // Önce mevcut protocol class'ları temizle
+        configuration.protocolClasses = configuration.protocolClasses?.filter { $0 != LatiFlexURLProtocol.self }
+        
+        // Sonra ekle
         var protocolClasses = configuration.protocolClasses ?? []
         protocolClasses.insert(LatiFlexURLProtocol.self, at: 0)
         configuration.protocolClasses = protocolClasses
@@ -89,6 +89,10 @@ public final class LatiFlex: LatiFlexInterface {
     // Internal method to notify about new network requests
     internal func notifyNetworkRequest(_ model: LatiFlexNetworkingModel) {
         networkRequestCallback?(model)
+    }
+    
+    private func setupNetworkMocking() {
+        URLProtocol.registerClass(LatiFlexURLProtocol.self)
     }
 }
 
