@@ -5,11 +5,13 @@ public class LatiFlexURLProtocol: URLProtocol {
     private static let queue = DispatchQueue(label: "com.latiflex.urlprotocol", qos: .userInitiated)
     private var networkingModel: LatiFlexNetworkingModel!
     
-    private lazy var session: URLSession = {
+    // Shared session instance
+    private static let sharedSession: URLSession = {
         let config = URLSessionConfiguration.ephemeral
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = nil
-        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
+        let session = URLSession(configuration: config)
+        return session
     }()
     
     public override class func canInit(with request: URLRequest) -> Bool {
@@ -33,7 +35,7 @@ public class LatiFlexURLProtocol: URLProtocol {
                 return
             }
             
-            self.dataTask = self.session.dataTask(with: self.request) { [weak self] data, response, error in
+            self.dataTask = LatiFlexURLProtocol.sharedSession.dataTask(with: self.request) { [weak self] data, response, error in
                 guard let self = self else { return }
                 
                 if let error = error {
