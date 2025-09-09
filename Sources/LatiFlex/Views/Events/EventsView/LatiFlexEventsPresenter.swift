@@ -18,6 +18,11 @@ protocol LatiFlexEventsPresenterInterface {
     func arguments(at index: Int) -> LatiFlexCellPresenter.Arguments
     func textDidChange(searchtext: String)
     func summarizeSwitchChanged(isOn: Bool)
+    func shouldShowGrouped() -> Bool
+    func isGroupHeader(at index: Int) -> Bool
+    func groupedEventForIndex(_ index: Int) -> GroupedEvent?
+    func expandAll()
+    func collapseAll()
 }
 
 private extension LatiFlexEventPresenter {
@@ -33,6 +38,7 @@ private extension LatiFlexEventPresenter {
         case Delphoi
         case Demeter
         case Firebase
+        case Facebook
         case NewRelic
         case CleverTap
 
@@ -69,6 +75,8 @@ final class LatiFlexEventPresenter {
     private var removeLatiFlexEvents: ([LatiFlexEvents]) -> ()
     private var selectedIndex: Int = .zero
     private var isSummarizeEnabled: Bool = false
+    private var groupedEvents: [GroupedEvent] = []
+    private var expandedGroups: Set<String> = []
 
     init(view: LatiFlexEventsViewInterface?,
          router: LatiFlexEventsRouterInterface,
@@ -88,6 +96,7 @@ final class LatiFlexEventPresenter {
     @objc private func deleteButtonTapped() {
         removeLatiFlexEvents([])
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[selectedIndex] }
+        updateGroupedEvents()
         view?.reloadData()
     }
 
@@ -132,7 +141,20 @@ final class LatiFlexEventPresenter {
 }
 
 extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
-    var numberOfItems: Int { currentEventList.count }
+    var numberOfItems: Int { 
+        if !shouldShowGrouped() {
+            return currentEventList.count
+        }
+        
+        var count = 0
+        for group in groupedEvents {
+            count += 1 // Group header
+            if group.count > 1 && group.isExpanded {
+                count += group.events.count // Individual events
+            }
+        }
+        return count
+    }
     
     var isSummarizeSwitchEnabled: Bool {
         return isSummarizeEnabled
@@ -141,6 +163,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     func viewDidLoad() {
         view?.prepareUI()
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes.first ?? Events.Adjust.rawValue }
+        updateGroupedEvents()
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
                                                bundle: .module),
                                  position: .left,
@@ -155,10 +178,19 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
         view?.prepareSegmentedControl(items: items)
         view?.prepareEventListView()
         prepareSummarizeView()
+        updateExpandCollapseButtonsVisibility()
     }
 
     func didSelectItem(at index: Int) {
-        guard let eventResult = item(at: index)?.eventResult else { return }
+        // Handle group expansion for grouped view
+        if shouldShowGrouped() && isGroupHeader(at: index) {
+            if let group = groupedEventForIndex(index), group.count > 1 {
+                toggleGroupExpansion(at: index)
+                return
+            }
+        }
+        
+        guard let eventResult = eventForIndex(index)?.eventResult else { return }
         switch eventResult {
         case let .success(_, parameters):
             router.presentEventDetail(eventParameters: summarizeEventIfNeeded(parameters: parameters), eventError: nil)
@@ -168,10 +200,17 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
     }
 
     func item(at index: Int) -> LatiFlexEvents? {
-        currentEventList[index]
+        eventForIndex(index)
     }
 
     func arguments(at index: Int) -> LatiFlexCellPresenter.Arguments {
+        if shouldShowGrouped() && isGroupHeader(at: index) {
+            // Return grouped event data
+            guard let group = groupedEventForIndex(index) else { return .init() }
+            let titleText = group.count > 1 ? "\(group.title) (\(group.count))" : group.title
+            return .init(title: titleText, detail: group.subtitle, isSuccess: group.isSuccess)
+        }
+        
         guard let event = item(at: index) else { return .init() }
         let title = title(event: event)
         let detail = detail(event: event)
@@ -182,7 +221,10 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
         selectedIndex = index
         filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes[index] }
         searchedLatiFlexEvents = nil
+        expandedGroups.removeAll() // Clear to trigger expand by default for new segment
+        updateGroupedEvents()
         prepareSummarizeView()
+        updateExpandCollapseButtonsVisibility()
         view?.setSearchBarText(text: "")
         view?.reloadData()
     }
@@ -192,7 +234,9 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
             selectedSegmentChanged(index: selectedIndex)
             return
         }
-        searchedLatiFlexEvents = currentEventList.filter { checkEventContains(event: $0.eventResult, keyword: searchtext) }
+        searchedLatiFlexEvents = filteredLatiFlexEvents.filter { checkEventContains(event: $0.eventResult, keyword: searchtext) }
+        updateGroupedEvents()
+        updateExpandCollapseButtonsVisibility()
         view?.reloadData()
     }
     
@@ -204,11 +248,17 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
 }
 
 
-private extension LatiFlexEventPresenter {
+extension LatiFlexEventPresenter {
     func prepareSummarizeView() {
         let eventType = LatiFlex.shared.eventTypes[selectedIndex]
         let isSummarizeVisible =  eventType == "Demeter" || eventType == "Delphoi"
         view?.setSummarizeStackViewVisibility(isHidden: !isSummarizeVisible)
+    }
+    
+    func updateExpandCollapseButtonsVisibility() {
+        // Show expand/collapse buttons only when there are grouped events
+        let hasGroupedEvents = shouldShowGrouped()
+        view?.setExpandCollapseButtonsVisibility(isHidden: !hasGroupedEvents)
     }
     
     func summarizeEventIfNeeded(parameters: [String: Any]) -> [String: Any] {
@@ -240,5 +290,189 @@ private extension LatiFlexEventPresenter {
         var tempParameters = parameters
         removeableParameterKeys.forEach({ tempParameters.removeValue(forKey: $0)})
         return tempParameters
+    }
+    
+    func shouldShowGrouped() -> Bool {
+        // Show grouped view when there are repetitive events
+        return groupedEvents.contains { $0.count > 1 }
+    }
+    
+    func updateGroupedEvents() {
+        var groups: [String: [LatiFlexEvents]] = [:]
+        
+        // Group events by title + subtitle
+        for event in currentEventList {
+            let title = title(event: event) ?? ""
+            let subtitle = detail(event: event) ?? ""
+            let key = "\(title)|\(subtitle)"
+            
+            if groups[key] == nil {
+                groups[key] = []
+            }
+            groups[key]?.append(event)
+        }
+        
+        // Convert to GroupedEvent array maintaining order
+        groupedEvents = []
+        var processedEvents = Set<ObjectIdentifier>()
+        
+        // If this is the first time, expand all groups by default
+        let shouldExpandByDefault = expandedGroups.isEmpty && !groups.isEmpty
+        
+        for event in currentEventList {
+            guard !processedEvents.contains(ObjectIdentifier(event as AnyObject)) else { continue }
+            
+            let title = title(event: event) ?? ""
+            let subtitle = detail(event: event)
+            let key = "\(title)|\(subtitle ?? "")"
+            
+            if let group = groups[key] {
+                // Expand by default on first load if group has multiple items
+                if shouldExpandByDefault && group.count > 1 {
+                    expandedGroups.insert(key)
+                }
+                
+                let isExpanded = expandedGroups.contains(key)
+                let groupedEvent = GroupedEvent(title: title, subtitle: subtitle, events: group, isExpanded: isExpanded)
+                groupedEvents.append(groupedEvent)
+                
+                // Mark all events in this group as processed
+                for e in group {
+                    processedEvents.insert(ObjectIdentifier(e as AnyObject))
+                }
+            }
+        }
+    }
+    
+    func toggleGroupExpansion(at index: Int) {
+        guard let group = groupedEventForIndex(index) else { return }
+        let key = "\(group.title)|\(group.subtitle ?? "")"
+        
+        if expandedGroups.contains(key) {
+            expandedGroups.remove(key)
+        } else {
+            expandedGroups.insert(key)
+        }
+        
+        // Don't call updateGroupedEvents here - just update the isExpanded flag
+        for i in 0..<groupedEvents.count {
+            if groupedEvents[i].title == group.title && groupedEvents[i].subtitle == group.subtitle {
+                groupedEvents[i] = GroupedEvent(
+                    title: groupedEvents[i].title,
+                    subtitle: groupedEvents[i].subtitle,
+                    events: groupedEvents[i].events,
+                    isExpanded: expandedGroups.contains(key)
+                )
+                break
+            }
+        }
+        
+        view?.reloadData()
+    }
+    
+    func groupedEventForIndex(_ index: Int) -> GroupedEvent? {
+        guard shouldShowGrouped() else { return nil }
+        
+        var currentIndex = 0
+        for (groupIndex, group) in groupedEvents.enumerated() {
+            if currentIndex == index {
+                return group
+            }
+            currentIndex += 1
+            
+            if group.count > 1 && group.isExpanded {
+                currentIndex += group.events.count
+            }
+        }
+        return nil
+    }
+    
+    func eventForIndex(_ index: Int) -> LatiFlexEvents? {
+        if !shouldShowGrouped() {
+            return currentEventList[safe: index]
+        }
+        
+        var currentIndex = 0
+        for group in groupedEvents {
+            if currentIndex == index {
+                return group.events.first
+            }
+            currentIndex += 1
+            
+            if group.count > 1 && group.isExpanded {
+                for (eventIdx, event) in group.events.enumerated() {
+                    if currentIndex == index {
+                        return event
+                    }
+                    currentIndex += 1
+                }
+            }
+        }
+        return nil
+    }
+    
+    func isGroupHeader(at index: Int) -> Bool {
+        guard shouldShowGrouped() else { return false }
+        
+        var currentIndex = 0
+        for group in groupedEvents {
+            if currentIndex == index {
+                return true
+            }
+            currentIndex += 1
+            
+            if group.count > 1 && group.isExpanded {
+                // Skip individual event indices
+                if index < currentIndex + group.events.count {
+                    return false // This is an individual event
+                }
+                currentIndex += group.events.count
+            }
+        }
+        return false
+    }
+    
+    func expandAll() {
+        for group in groupedEvents where group.count > 1 {
+            let key = "\(group.title)|\(group.subtitle ?? "")"
+            expandedGroups.insert(key)
+        }
+        
+        // Update isExpanded flag for all groups
+        for i in 0..<groupedEvents.count {
+            if groupedEvents[i].count > 1 {
+                let key = "\(groupedEvents[i].title)|\(groupedEvents[i].subtitle ?? "")"
+                groupedEvents[i] = GroupedEvent(
+                    title: groupedEvents[i].title,
+                    subtitle: groupedEvents[i].subtitle,
+                    events: groupedEvents[i].events,
+                    isExpanded: expandedGroups.contains(key)
+                )
+            }
+        }
+        
+        view?.reloadData()
+    }
+    
+    func collapseAll() {
+        expandedGroups.removeAll()
+        
+        // Update isExpanded flag for all groups
+        for i in 0..<groupedEvents.count {
+            groupedEvents[i] = GroupedEvent(
+                title: groupedEvents[i].title,
+                subtitle: groupedEvents[i].subtitle,
+                events: groupedEvents[i].events,
+                isExpanded: false
+            )
+        }
+        
+        view?.reloadData()
+    }
+}
+
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

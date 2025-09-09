@@ -15,6 +15,7 @@ protocol LatiFlexEventsViewInterface: AnyObject, NavigationBarCustomButtonConfig
     func prepareEventListView()
     func setSearchBarText(text: String)
     func setSummarizeStackViewVisibility(isHidden: Bool)
+    func setExpandCollapseButtonsVisibility(isHidden: Bool)
 }
 
 private extension LatiFlexEventsViewController {
@@ -35,6 +36,7 @@ final class LatiFlexEventsViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(LatiFlexCell.self, forCellWithReuseIdentifier: "LatiFlexCell")
+        collectionView.register(LatiFlexGroupedCell.self, forCellWithReuseIdentifier: "LatiFlexGroupedCell")
         collectionView.backgroundColor = .white
         return collectionView
     }()
@@ -54,8 +56,23 @@ final class LatiFlexEventsViewController: UIViewController {
     
     private var stackView: UIStackView?
     private var segmentedControl: UISegmentedControl?
+    private var expandCollapseStackView: UIStackView?
 
     private let searchBar = UISearchBar()
+    
+    private let expandAllButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Expand All", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        return button
+    }()
+    
+    private let collapseAllButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Collapse All", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +86,14 @@ final class LatiFlexEventsViewController: UIViewController {
     @objc private func switchClicked() {
         presenter.summarizeSwitchChanged(isOn: summarizeSwitch.isOn)
     }
+    
+    @objc private func expandAllTapped() {
+        presenter.expandAll()
+    }
+    
+    @objc private func collapseAllTapped() {
+        presenter.collapseAll()
+    }
 }
 
 extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
@@ -81,6 +106,10 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
         navigationItem.titleView = searchBar
         searchBar.delegate = self
         collectionView.keyboardDismissMode = .onDrag
+        
+        // Add button targets
+        expandAllButton.addTarget(self, action: #selector(expandAllTapped), for: .touchUpInside)
+        collapseAllButton.addTarget(self, action: #selector(collapseAllTapped), for: .touchUpInside)
     }
 
     func reloadData() {
@@ -93,6 +122,10 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
     
     func setSummarizeStackViewVisibility(isHidden: Bool) {
         stackView?.isHidden = isHidden
+    }
+    
+    func setExpandCollapseButtonsVisibility(isHidden: Bool) {
+        expandCollapseStackView?.isHidden = isHidden
     }
 
     func prepareSegmentedControl(items: [String]) {
@@ -118,7 +151,14 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
         stackView.spacing = 10
         self.stackView = stackView
         
-        let verticalStackView = UIStackView(arrangedSubviews: [stackView, collectionView])
+        // Add expand/collapse buttons stack
+        let expandCollapseStackView = UIStackView(arrangedSubviews: [UIView(), expandAllButton, collapseAllButton, UIView()])
+        expandCollapseStackView.axis = .horizontal
+        expandCollapseStackView.distribution = .fill
+        expandCollapseStackView.spacing = 15
+        self.expandCollapseStackView = expandCollapseStackView
+        
+        let verticalStackView = UIStackView(arrangedSubviews: [stackView, expandCollapseStackView, collectionView])
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 10
         verticalStackView.embed(in: view,
@@ -138,6 +178,16 @@ extension LatiFlexEventsViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // Check if we should show grouped cell
+        if presenter.shouldShowGrouped() && presenter.isGroupHeader(at: indexPath.item) {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexGroupedCell", for: indexPath) as? LatiFlexGroupedCell else { return UICollectionViewCell() }
+            if let group = presenter.groupedEventForIndex(indexPath.item) {
+                cell.configure(with: group)
+            }
+            return cell
+        }
+        
+        // Regular cell
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LatiFlexCell", for: indexPath) as? LatiFlexCell else { return UICollectionViewCell() }
         let cellPresenter = LatiFlexCellPresenter(view: cell,
                                                   arguments: presenter.arguments(at: indexPath.item))
@@ -152,7 +202,8 @@ extension LatiFlexEventsViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: view.frame.width, height: Constant.cellHeight)
+        let height: CGFloat = presenter.shouldShowGrouped() && presenter.isGroupHeader(at: indexPath.item) ? 70 : Constant.cellHeight
+        return .init(width: view.frame.width, height: height)
     }
 }
 
