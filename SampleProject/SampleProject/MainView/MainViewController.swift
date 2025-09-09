@@ -19,11 +19,11 @@ class MainViewController: UIViewController  {
         // Clear any existing events first
         LatiFlex.shared.events.removeAll()
         
-        // Register event types
+        // Register event types - Demeter first as general
+        LatiFlex.shared.appendEventTypes(type: "Demeter")
         LatiFlex.shared.appendEventTypes(type: "Firebase")
         LatiFlex.shared.appendEventTypes(type: "Facebook")
         LatiFlex.shared.appendEventTypes(type: "Adjust")
-        LatiFlex.shared.appendEventTypes(type: "Demeter")
         LatiFlex.shared.appendEventTypes(type: "Delphoi")
         LatiFlex.shared.appendEventTypes(type: "CleverTap")
         LatiFlex.shared.appendEventTypes(type: "NewRelic")

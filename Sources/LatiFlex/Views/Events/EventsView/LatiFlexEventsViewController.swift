@@ -20,9 +20,10 @@ protocol LatiFlexEventsViewInterface: AnyObject, NavigationBarCustomButtonConfig
 
 private extension LatiFlexEventsViewController {
     enum Constant {
-        static let minimumLineSpacing: CGFloat = 10
-        static let collectionViewTopConstraint: CGFloat = 10
-        static let cellHeight: CGFloat = 50
+        static let minimumLineSpacing: CGFloat = 8
+        static let collectionViewTopConstraint: CGFloat = 12
+        static let cellHeight: CGFloat = 56
+        static let groupedCellHeight: CGFloat = 84
     }
 }
 
@@ -33,11 +34,14 @@ final class LatiFlexEventsViewController: UIViewController {
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = Constant.minimumLineSpacing
+        layout.minimumInteritemSpacing = 0
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = true
         collectionView.register(LatiFlexCell.self, forCellWithReuseIdentifier: "LatiFlexCell")
         collectionView.register(LatiFlexGroupedCell.self, forCellWithReuseIdentifier: "LatiFlexGroupedCell")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .systemGroupedBackground
+        collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         return collectionView
     }()
     
@@ -63,14 +67,22 @@ final class LatiFlexEventsViewController: UIViewController {
     private let expandAllButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Expand All", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.1)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.layer.cornerRadius = 16
+        button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
         return button
     }()
     
     private let collapseAllButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Collapse All", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = UIColor.systemGray5
+        button.setTitleColor(.label, for: .normal)
+        button.layer.cornerRadius = 16
+        button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
         return button
     }()
 
@@ -102,9 +114,10 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
     func prepareUI() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGroupedBackground
         navigationItem.titleView = searchBar
         searchBar.delegate = self
+        searchBar.searchBarStyle = .minimal
         collectionView.keyboardDismissMode = .onDrag
         
         // Add button targets
@@ -155,7 +168,7 @@ extension LatiFlexEventsViewController: LatiFlexEventsViewInterface {
         let expandCollapseStackView = UIStackView(arrangedSubviews: [UIView(), expandAllButton, collapseAllButton, UIView()])
         expandCollapseStackView.axis = .horizontal
         expandCollapseStackView.distribution = .fill
-        expandCollapseStackView.spacing = 15
+        expandCollapseStackView.spacing = 12
         self.expandCollapseStackView = expandCollapseStackView
         
         let verticalStackView = UIStackView(arrangedSubviews: [stackView, expandCollapseStackView, collectionView])
@@ -202,7 +215,7 @@ extension LatiFlexEventsViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height: CGFloat = presenter.shouldShowGrouped() && presenter.isGroupHeader(at: indexPath.item) ? 70 : Constant.cellHeight
+        let height: CGFloat = presenter.shouldShowGrouped() && presenter.isGroupHeader(at: indexPath.item) ? Constant.groupedCellHeight : Constant.cellHeight
         return .init(width: view.frame.width, height: height)
     }
 }

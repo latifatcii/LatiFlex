@@ -34,13 +34,13 @@ private extension LatiFlexEventPresenter {
     }
 
     enum Events: String, CaseIterable {
-        case Adjust
-        case Delphoi
         case Demeter
         case Firebase
         case Facebook
-        case NewRelic
+        case Adjust
+        case Delphoi
         case CleverTap
+        case NewRelic
 
         var shouldUseNameAsTitle: Bool { self == .Demeter }
         var eventKey: String {
@@ -114,26 +114,38 @@ final class LatiFlexEventPresenter {
     }
 
     private func title(event : LatiFlexEvents) -> String? {
-        guard let eventType = Events(rawValue: event.eventType) else { return nil }
-        let eventTypeValue = eventType.rawValue
+        let eventType = Events(rawValue: event.eventType)
+        let eventTypeValue = event.eventType
 
         switch event.eventResult {
         case let .success(name, parameters):
-            guard !eventType.shouldUseNameAsTitle else { return name }
-            let title = parameters[eventType.eventKey] as? String
-            return title ?? eventTypeValue
+            // For known event types that should use name as title
+            if let eventType = eventType, eventType.shouldUseNameAsTitle {
+                return name
+            }
+            // Try to get title from parameters using known event keys
+            if let eventType = eventType {
+                let title = parameters[eventType.eventKey] as? String
+                return title ?? eventTypeValue
+            }
+            // Fallback for unknown event types - try common parameter keys
+            return (parameters["event"] as? String) ?? eventTypeValue
         case .failure:
             return eventTypeValue
         }
     }
 
     private func detail(event : LatiFlexEvents) -> String? {
-        guard let eventType = Events(rawValue: event.eventType) else { return nil }
+        let eventType = Events(rawValue: event.eventType)
 
         switch event.eventResult {
         case let .success(_, parameters):
-            guard let groupKey = eventType.groupKey else { return nil }
-            return parameters[groupKey] as? String
+            // For known event types with group keys
+            if let eventType = eventType, let groupKey = eventType.groupKey {
+                return parameters[groupKey] as? String
+            }
+            // For unknown event types or those without group keys, return nil
+            return nil
         case .failure:
             return Constant.failedEventText
         }
@@ -162,7 +174,7 @@ extension LatiFlexEventPresenter: LatiFlexEventsPresenterInterface {
 
     func viewDidLoad() {
         view?.prepareUI()
-        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes.first ?? Events.Adjust.rawValue }
+        filteredLatiFlexEvents = latiFlexEvents().filter { $0.eventType == LatiFlex.shared.eventTypes.first ?? Events.Demeter.rawValue }
         updateGroupedEvents()
         view?.setCustomBarButton(style: .image(image: Constant.closeButtonImage,
                                                bundle: .module),
@@ -299,48 +311,47 @@ extension LatiFlexEventPresenter {
     
     func updateGroupedEvents() {
         var groups: [String: [LatiFlexEvents]] = [:]
+        var groupOrder: [String] = []
         
-        // Group events by title + subtitle
+        // Group events by title + subtitle, maintaining order
         for event in currentEventList {
-            let title = title(event: event) ?? ""
-            let subtitle = detail(event: event) ?? ""
-            let key = "\(title)|\(subtitle)"
+            let eventTitle = title(event: event) ?? ""
+            let eventSubtitle = detail(event: event) ?? ""
+            let key = "\(eventTitle)|\(eventSubtitle)"
             
             if groups[key] == nil {
                 groups[key] = []
+                groupOrder.append(key)
             }
             groups[key]?.append(event)
         }
         
         // Convert to GroupedEvent array maintaining order
         groupedEvents = []
-        var processedEvents = Set<ObjectIdentifier>()
         
         // If this is the first time, expand all groups by default
         let shouldExpandByDefault = expandedGroups.isEmpty && !groups.isEmpty
         
-        for event in currentEventList {
-            guard !processedEvents.contains(ObjectIdentifier(event as AnyObject)) else { continue }
+        for key in groupOrder {
+            guard let groupEvents = groups[key] else { continue }
             
-            let title = title(event: event) ?? ""
-            let subtitle = detail(event: event)
-            let key = "\(title)|\(subtitle ?? "")"
+            let components = key.split(separator: "|", maxSplits: 1)
+            let groupTitle = components.first.map(String.init) ?? ""
+            let groupSubtitle = components.count > 1 ? String(components[1]) : nil
             
-            if let group = groups[key] {
-                // Expand by default on first load if group has multiple items
-                if shouldExpandByDefault && group.count > 1 {
-                    expandedGroups.insert(key)
-                }
-                
-                let isExpanded = expandedGroups.contains(key)
-                let groupedEvent = GroupedEvent(title: title, subtitle: subtitle, events: group, isExpanded: isExpanded)
-                groupedEvents.append(groupedEvent)
-                
-                // Mark all events in this group as processed
-                for e in group {
-                    processedEvents.insert(ObjectIdentifier(e as AnyObject))
-                }
+            // Expand by default on first load if group has multiple items
+            if shouldExpandByDefault && groupEvents.count > 1 {
+                expandedGroups.insert(key)
             }
+            
+            let isExpanded = expandedGroups.contains(key)
+            let groupedEvent = GroupedEvent(
+                title: groupTitle,
+                subtitle: groupSubtitle,
+                events: groupEvents,
+                isExpanded: isExpanded
+            )
+            groupedEvents.append(groupedEvent)
         }
     }
     
