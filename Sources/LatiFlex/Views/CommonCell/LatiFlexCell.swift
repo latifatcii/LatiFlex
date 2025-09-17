@@ -18,10 +18,12 @@ protocol LatiFlexCellInterface: AnyObject {
 
 private extension LatiFlexCell {
     enum Constant {
-        static let titleLabelFontSize: CGFloat = 16
+        static let titleLabelFontSize: CGFloat = 14
         static let detailLabelFontSize: CGFloat = 12
-        static let stackViewLeadingConstraint: CGFloat = 10
-        static let separatorViewHeight: CGFloat = 1
+        static let stackViewLeadingConstraint: CGFloat = 20
+        static let stackViewTrailingConstraint: CGFloat = -20
+        static let separatorViewHeight: CGFloat = 0.5
+        static let verticalPadding: CGFloat = 6
     }
 }
 
@@ -34,7 +36,7 @@ final class LatiFlexCell: UICollectionViewCell {
 
     private var titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: Constant.titleLabelFontSize)
+        titleLabel.font = .systemFont(ofSize: Constant.titleLabelFontSize, weight: .bold)
 
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return titleLabel
@@ -58,16 +60,30 @@ final class LatiFlexCell: UICollectionViewCell {
 
 extension LatiFlexCell: LatiFlexCellInterface {
     func prepareUI() {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, detailLabel, separatorView])
-        stackView.axis = .vertical
-        stackView.distribution = .fill
-        stackView.embed(in: self,
-                        anchors: [.top(.zero),
-                                  .leading(Constant.stackViewLeadingConstraint),
-                                  .trailing(.zero),
-                                  .bottom(.zero)])
+        contentView.backgroundColor = .systemBackground
+        
+        let labelStackView = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
+        labelStackView.axis = .vertical
+        labelStackView.spacing = 2
+        labelStackView.distribution = .fill
+        
+        contentView.addSubview(labelStackView)
+        labelStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            labelStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constant.verticalPadding),
+            labelStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constant.stackViewLeadingConstraint),
+            labelStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constant.stackViewTrailingConstraint),
+            labelStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constant.verticalPadding)
+        ])
+        
+        contentView.addSubview(separatorView)
         separatorView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.heightAnchor.constraint(equalToConstant: Constant.separatorViewHeight).isActive = true
+        NSLayoutConstraint.activate([
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constant.stackViewLeadingConstraint),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: Constant.separatorViewHeight)
+        ])
     }
 
     func setTitleLabel(text: String?) {
