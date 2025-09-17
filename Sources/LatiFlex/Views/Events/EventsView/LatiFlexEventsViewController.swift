@@ -20,10 +20,10 @@ protocol LatiFlexEventsViewInterface: AnyObject, NavigationBarCustomButtonConfig
 
 private extension LatiFlexEventsViewController {
     enum Constant {
-        static let minimumLineSpacing: CGFloat = 8
+        static let minimumLineSpacing: CGFloat = 6
         static let collectionViewTopConstraint: CGFloat = 12
-        static let cellHeight: CGFloat = 56
-        static let groupedCellHeight: CGFloat = 84
+        static let cellHeight: CGFloat = 52
+        static let groupedCellHeight: CGFloat = 56
     }
 }
 

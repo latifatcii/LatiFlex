@@ -18,12 +18,12 @@ protocol LatiFlexCellInterface: AnyObject {
 
 private extension LatiFlexCell {
     enum Constant {
-        static let titleLabelFontSize: CGFloat = 16
-        static let detailLabelFontSize: CGFloat = 13
+        static let titleLabelFontSize: CGFloat = 14
+        static let detailLabelFontSize: CGFloat = 12
         static let stackViewLeadingConstraint: CGFloat = 20
         static let stackViewTrailingConstraint: CGFloat = -20
         static let separatorViewHeight: CGFloat = 0.5
-        static let verticalPadding: CGFloat = 12
+        static let verticalPadding: CGFloat = 6
     }
 }
 
@@ -36,7 +36,7 @@ final class LatiFlexCell: UICollectionViewCell {
 
     private var titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: Constant.titleLabelFontSize)
+        titleLabel.font = .systemFont(ofSize: Constant.titleLabelFontSize, weight: .bold)
 
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return titleLabel
@@ -64,7 +64,7 @@ extension LatiFlexCell: LatiFlexCellInterface {
         
         let labelStackView = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
         labelStackView.axis = .vertical
-        labelStackView.spacing = 3
+        labelStackView.spacing = 2
         labelStackView.distribution = .fill
         
         contentView.addSubview(labelStackView)

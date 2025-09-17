@@ -16,18 +16,18 @@ protocol LatiFlexGroupedCellInterface: AnyObject {
 
 private extension LatiFlexGroupedCell {
     enum Constant {
-        static let titleLabelFontSize: CGFloat = 16
-        static let detailLabelFontSize: CGFloat = 13
-        static let countLabelFontSize: CGFloat = 14
-        static let stackViewLeadingConstraint: CGFloat = 16
-        static let stackViewTrailingConstraint: CGFloat = -16
+        static let titleLabelFontSize: CGFloat = 15
+        static let detailLabelFontSize: CGFloat = 12
+        static let countLabelFontSize: CGFloat = 13
+        static let stackViewLeadingConstraint: CGFloat = 12
+        static let stackViewTrailingConstraint: CGFloat = -14
         static let separatorViewHeight: CGFloat = 0.5
-        static let countBadgeHeight: CGFloat = 28
-        static let countBadgeWidth: CGFloat = 44 // Fixed width for up to 3 digits
-        static let countBadgeTrailingConstraint: CGFloat = -16
-        static let expandIconSize: CGFloat = 20
-        static let cornerRadius: CGFloat = 12
-        static let verticalPadding: CGFloat = 14
+        static let countBadgeHeight: CGFloat = 24
+        static let countBadgeWidth: CGFloat = 32 // Reduced width to give more space for text
+        static let countBadgeTrailingConstraint: CGFloat = -14
+        static let expandIconSize: CGFloat = 18
+        static let cornerRadius: CGFloat = 10
+        static let verticalPadding: CGFloat = 10
     }
 }
 
@@ -51,8 +51,10 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constant.titleLabelFontSize, weight: .medium)
-        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.numberOfLines = 1
         label.lineBreakMode = .byTruncatingTail
         return label
@@ -61,11 +63,15 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
     private let detailLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constant.detailLabelFontSize)
-        label.textColor = .darkGray
+        label.textColor = .black
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        label.numberOfLines = 1
-        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.8
         return label
     }()
 
@@ -73,6 +79,7 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.15)
         view.layer.cornerRadius = Constant.countBadgeHeight / 2
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return view
     }()
 
@@ -116,10 +123,10 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
         contentView.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -76), // -16 margin - 44 badge width - 16 spacing
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6)
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2)
         ])
 
         // Setup expand icon
@@ -127,13 +134,13 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
         expandIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             expandIconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: Constant.stackViewLeadingConstraint),
-            expandIconImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            expandIconImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
             expandIconImageView.widthAnchor.constraint(equalToConstant: Constant.expandIconSize),
             expandIconImageView.heightAnchor.constraint(equalToConstant: Constant.expandIconSize)
         ])
 
-        // Setup count badge at trailing edge
-        contentView.addSubview(countBadgeView)
+        // Setup count badge at trailing edge inside container
+        containerView.addSubview(countBadgeView)
         countBadgeView.translatesAutoresizingMaskIntoConstraints = false
         countBadgeView.addSubview(countLabel)
         countLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -143,8 +150,8 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
         ])
 
         NSLayoutConstraint.activate([
-            countBadgeView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            countBadgeView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            countBadgeView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+            countBadgeView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 9),
             countBadgeView.heightAnchor.constraint(equalToConstant: Constant.countBadgeHeight),
             countBadgeView.widthAnchor.constraint(equalToConstant: Constant.countBadgeWidth)
         ])
@@ -152,16 +159,17 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
         // Setup labels without date range initially
         let mainLabelsStack = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
         mainLabelsStack.axis = .vertical
-        mainLabelsStack.spacing = 2
+        mainLabelsStack.spacing = 0
         mainLabelsStack.distribution = .fill
-        mainLabelsStack.alignment = .leading
+        mainLabelsStack.alignment = .fill
 
         containerView.addSubview(mainLabelsStack)
         mainLabelsStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mainLabelsStack.leadingAnchor.constraint(equalTo: expandIconImageView.trailingAnchor, constant: 12),
-            mainLabelsStack.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -12),
-            mainLabelsStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+            mainLabelsStack.leadingAnchor.constraint(equalTo: expandIconImageView.trailingAnchor, constant: 8),
+            mainLabelsStack.trailingAnchor.constraint(equalTo: countBadgeView.leadingAnchor, constant: -8),
+            mainLabelsStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            mainLabelsStack.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -8)
         ])
         
         // Add date range label separately, below the main stack
@@ -169,8 +177,8 @@ final class LatiFlexGroupedCell: UICollectionViewCell {
         dateRangeLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dateRangeLabel.leadingAnchor.constraint(equalTo: mainLabelsStack.leadingAnchor),
-            dateRangeLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -12),
-            dateRangeLabel.topAnchor.constraint(equalTo: mainLabelsStack.bottomAnchor, constant: 2)
+            dateRangeLabel.trailingAnchor.constraint(equalTo: countBadgeView.leadingAnchor, constant: -8),
+            dateRangeLabel.topAnchor.constraint(equalTo: mainLabelsStack.bottomAnchor, constant: 1)
         ])
 
         // No separator needed for card-style design
